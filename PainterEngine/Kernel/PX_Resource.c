@@ -126,13 +126,13 @@ px_bool PX_ResourceLibraryLoad(PX_ResourceLibrary *lib,PX_RESOURCE_TYPE type,px_
 				while (offset<datasize)
 				{
 					pBlock=(PX_WAVE_DATA_BLOCK*)(data+offset);
-					if(!px_memequ(pBlock->szDataID,"data",4))
+					if(!PX_memequ(pBlock->szDataID,"data",4))
 					{
 						offset+=pBlock->dwDataSize+sizeof(PX_WAVE_DATA_BLOCK);
 						continue;
 					}
 					offset+=sizeof(PX_WAVE_DATA_BLOCK);
-					px_memcpy(res.sound.buffer+woffset,data+offset,pBlock->dwDataSize);
+					PX_memcpy(res.sound.buffer+woffset,data+offset,pBlock->dwDataSize);
 					offset+=pBlock->dwDataSize;
 					woffset+=pBlock->dwDataSize;
 				}

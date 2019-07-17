@@ -279,7 +279,7 @@ px_bool PX_BitmapBuild(px_surface *psurface,px_char *BitmapBuffer,px_int *size)
 	{
 		fileheader.bfType[0]='B';
 		fileheader.bfType[1]='M';
-		px_memcpy(fileheader.bfSize,&_outsize,4);
+		PX_memcpy(fileheader.bfSize,&_outsize,4);
 		fileheader.bfReserbed[0]=0;
 		fileheader.bfReserbed[1]=0;
 		fileheader.bfReserbed[2]=0;
@@ -298,8 +298,8 @@ px_bool PX_BitmapBuild(px_surface *psurface,px_char *BitmapBuffer,px_int *size)
 		infoheader.biXPelsPerMeter=2834;
 		infoheader.biYPelsPerMeter=2834;
 
-		px_memcpy(BitmapBuffer,&fileheader,sizeof(fileheader));
-		px_memcpy(BitmapBuffer+sizeof(PX_BITMAPFILEHEADER),&infoheader,sizeof(infoheader));
+		PX_memcpy(BitmapBuffer,&fileheader,sizeof(fileheader));
+		PX_memcpy(BitmapBuffer+sizeof(PX_BITMAPFILEHEADER),&infoheader,sizeof(infoheader));
 
 		pdata=(PX_BITMAP_RGB24 *)(BitmapBuffer+fileheader.bfOffbits);
 		for (y=psurface->height-1;y>=0;y--)

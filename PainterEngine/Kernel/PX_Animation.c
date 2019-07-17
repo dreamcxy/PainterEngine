@@ -11,7 +11,7 @@ px_bool PX_AnimationLibraryCreateFromMemory(px_memorypool *mp,px_animationlibrar
 	PX_2DX_CODE_Header _codeheader;
 
 	_header=*(PX_2DX_Header *)_2dxBuffer;
-	if (!px_memequ(&_header.magic,"2DX",sizeof(_header.magic)))
+	if (!PX_memequ(&_header.magic,"2DX",sizeof(_header.magic)))
 	{
 		return PX_FALSE;
 	}
@@ -25,7 +25,7 @@ px_bool PX_AnimationLibraryCreateFromMemory(px_memorypool *mp,px_animationlibrar
 		pbuffer+=sizeof(px_dword);
 		PX_StringInit(mp,&tag.name);
 		PX_StringCat(&tag.name,(px_char *)pbuffer);
-		pbuffer+=px_strlen((px_char *)pbuffer)+1;
+		pbuffer+=PX_strlen((px_char *)pbuffer)+1;
 		PX_VectorPushback(&panimation->animation,&tag);
 	}
 
@@ -371,7 +371,7 @@ px_bool PX_AnimationSetCurrentPlayAnimationByName(px_animation *animation,px_cha
 		for (i=0;i<animation->linker->animation.size;i++)
 		{
 			PX_Animationlibrary_tagInfo *tag=PX_VECTORAT(PX_Animationlibrary_tagInfo,&animation->linker->animation,i);
-			if (px_strequ(name,tag->name.buffer))
+			if (PX_strequ(name,tag->name.buffer))
 			{
 				animation->ip=tag->ip;
 				animation->reg_reservedTime=0;
@@ -389,7 +389,7 @@ px_int PX_AnimationGetPlayAnimationIndexByName(px_animation *animation,px_char *
 		for (i=0;i<animation->linker->animation.size;i++)
 		{
 			PX_Animationlibrary_tagInfo *tag=PX_VECTORAT(PX_Animationlibrary_tagInfo,&animation->linker->animation,i);
-			if (px_strequ(name,tag->name.buffer))
+			if (PX_strequ(name,tag->name.buffer))
 			{
 				return i;
 			}

@@ -341,7 +341,7 @@ fmul(limb *output, const limb *in, const limb *in2) {
   freduce_degree(t);
   freduce_coefficients(t);
   /* |t[i]| < 2^26 */
-  px_memcpy(output, t, sizeof(limb) * 10);
+  PX_memcpy(output, t, sizeof(limb) * 10);
 }
 
 /* Square a number: output = in**2
@@ -425,7 +425,7 @@ fsquare(limb *output, const limb *in) {
   freduce_degree(t);
   freduce_coefficients(t);
   /* |t[i]| < 2^26 */
-  px_memcpy(output, t, sizeof(limb) * 10);
+  PX_memcpy(output, t, sizeof(limb) * 10);
 }
 
 /* Take a little-endian, 32-byte number and expand it into polynomial form */
@@ -638,13 +638,13 @@ static void fmonty(limb *x2, limb *z2,  /* output 2Q */
   limb origx[10], origxprime[10], zzz[19], xx[19], zz[19], xxprime[19],
         zzprime[19], zzzprime[19], xxxprime[19];
 
-  px_memcpy(origx, x, 10 * sizeof(limb));
+  PX_memcpy(origx, x, 10 * sizeof(limb));
   fsum(x, z);
   /* |x[i]| < 2^27 */
   fdifference(z, origx);  /* does x - z */
   /* |z[i]| < 2^27 */
 
-  px_memcpy(origxprime, xprime, sizeof(limb) * 10);
+  PX_memcpy(origxprime, xprime, sizeof(limb) * 10);
   fsum(xprime, zprime);
   /* |xprime[i]| < 2^27 */
   fdifference(zprime, origxprime);
@@ -661,7 +661,7 @@ static void fmonty(limb *x2, limb *z2,  /* output 2Q */
   freduce_degree(zzprime);
   freduce_coefficients(zzprime);
   /* |zzprime[i]| < 2^26 */
-  px_memcpy(origxprime, xxprime, sizeof(limb) * 10);
+  PX_memcpy(origxprime, xxprime, sizeof(limb) * 10);
   fsum(xxprime, zzprime);
   /* |xxprime[i]| < 2^27 */
   fdifference(zzprime, origxprime);
@@ -675,8 +675,8 @@ static void fmonty(limb *x2, limb *z2,  /* output 2Q */
   freduce_degree(zzprime);
   freduce_coefficients(zzprime);
   /* |zzprime[i]| < 2^26 */
-  px_memcpy(x3, xxxprime, sizeof(limb) * 10);
-  px_memcpy(z3, zzprime, sizeof(limb) * 10);
+  PX_memcpy(x3, xxxprime, sizeof(limb) * 10);
+  PX_memcpy(z3, zzprime, sizeof(limb) * 10);
 
   fsquare(xx, x);
   /* |xx[i]| < 2^26 */
@@ -689,7 +689,7 @@ static void fmonty(limb *x2, limb *z2,  /* output 2Q */
   /* |x2[i]| < 2^26 */
   fdifference(zz, xx);  // does zz = xx - zz
   /* |zz[i]| < 2^27 */
-  px_memset(zzz + 10, 0, sizeof(limb) * 9);
+  PX_memset(zzz + 10, 0, sizeof(limb) * 9);
   fscalar_product(zzz, zz, 121665);
   /* |zzz[i]| < 2^(27+17) */
   /* No need to call freduce_degree here:
@@ -740,7 +740,7 @@ cmult(limb *resultx, limb *resultz, const px_byte *n, const limb *q) {
 
   unsigned i, j;
 
-  px_memcpy(nqpqx, (void *)q, sizeof(limb) * 10);
+  PX_memcpy(nqpqx, (void *)q, sizeof(limb) * 10);
 
   for (i = 0; i < 32; ++i) {
     px_byte byte = n[31 - i];
@@ -774,8 +774,8 @@ cmult(limb *resultx, limb *resultz, const px_byte *n, const limb *q) {
     }
   }
 
-  px_memcpy(resultx, nqx, sizeof(limb) * 10);
-  px_memcpy(resultz, nqz, sizeof(limb) * 10);
+  PX_memcpy(resultx, nqx, sizeof(limb) * 10);
+  PX_memcpy(resultz, nqz, sizeof(limb) * 10);
 }
 
 // -----------------------------------------------------------------------------

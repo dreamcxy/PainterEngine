@@ -180,7 +180,7 @@ px_memorypool MP_Create( px_void *MemoryAddr,px_uint MemorySize )
 	MP.MaxMemoryfragSize=0;
 	MP.nodeCount=0;
 	MP.ErrorCall_Ptr=PX_NULL;
-	px_memset(MemoryAddr,0,MemorySize);
+	PX_memset(MemoryAddr,0,MemorySize);
 
 #if defined(PX_DEBUG_MODE) && defined(PX_MEMORYPOOL_DEBUG_CHECK)
 
@@ -517,7 +517,7 @@ px_void MP_Reset(px_memorypool *Pool)
 	Pool->MaxMemoryfragSize=0;
 	Pool->nodeCount=0;
 #if defined(PX_DEBUG_MODE) && defined(PX_MEMORYPOOL_DEBUG_CHECK)
-	px_memset(Pool->DEBUG_allocdata,0,sizeof(Pool->DEBUG_allocdata));
+	PX_memset(Pool->DEBUG_allocdata,0,sizeof(Pool->DEBUG_allocdata));
 #endif
 }
 

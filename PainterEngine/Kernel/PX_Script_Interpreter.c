@@ -22,11 +22,11 @@ px_void PX_ScriptTranslatorError(px_lexer *lexer,px_char *info)
 	PX_Script_InterpreterError[0]='\0';
 	if (lexer->SourceOffset>200)
 	{
-		px_strcpy(PX_Script_InterpreterError,lexer->Sources+lexer->SourceOffset-200,200);	
+		PX_strcpy(PX_Script_InterpreterError,lexer->Sources+lexer->SourceOffset-200,200);	
 	}
 	else
 	{
-		px_strcpy(PX_Script_InterpreterError,lexer->Sources,200);	
+		PX_strcpy(PX_Script_InterpreterError,lexer->Sources,200);	
 	}
 	PX_LOG(info);
 }
@@ -86,7 +86,7 @@ px_bool PX_ScriptCompilerLoad(PX_SCRIPT_LIBRARY *lib,px_char *code)
 		PX_LexerFree(&lexer);
 		return PX_FALSE;
 	}
-	if (!px_strequ(lexer.CurLexeme.buffer,"#NAME"))
+	if (!PX_strequ(lexer.CurLexeme.buffer,"#NAME"))
 	{
 		PX_LexerFree(&lexer);
 		return PX_FALSE;
@@ -123,7 +123,7 @@ px_bool PX_ScriptCompilerLoad(PX_SCRIPT_LIBRARY *lib,px_char *code)
 
 	for (i=0;i<lib->codeLibraries.size;i++)
 	{
-		if (px_strequ(scode.name.buffer,PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->name.buffer))
+		if (PX_strequ(scode.name.buffer,PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->name.buffer))
 		{
 			 PX_StringFree(&scode.name);
 			 PX_StringFree(&scode.code);
@@ -193,7 +193,7 @@ static px_bool PX_ScriptParseInclude(px_string *codes,PX_SCRIPT_LIBRARY *lib,px_
 		}
 		if (type==PX_LEXER_LEXEME_TYPE_TOKEN)
 		{
-			if (px_strequ(lexer.CurLexeme.buffer,"#INCLUDE"))
+			if (PX_strequ(lexer.CurLexeme.buffer,"#INCLUDE"))
 			{
 					if (PX_ScriptTranslatorNextToken(&lexer)==PX_LEXER_LEXEME_TYPE_CONATINER)
 					{
@@ -206,7 +206,7 @@ static px_bool PX_ScriptParseInclude(px_string *codes,PX_SCRIPT_LIBRARY *lib,px_
 						bfound=PX_FALSE;
 						for (i=0;i<lib->codeLibraries.size;i++)
 						{
-							if (px_strequ(lexer.CurLexeme.buffer,PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->name.buffer))
+							if (PX_strequ(lexer.CurLexeme.buffer,PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->name.buffer))
 							{
 								if (PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->bInclude!=PX_FALSE)
 								{
@@ -231,7 +231,7 @@ static px_bool PX_ScriptParseInclude(px_string *codes,PX_SCRIPT_LIBRARY *lib,px_
 									}
 									
 								}
-								allocsize=lexerState.offset+px_strlen(PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->code.buffer)+px_strlen(lexer.Sources+PX_LexerGetState(&lexer).offset-1)+1;
+								allocsize=lexerState.offset+PX_strlen(PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->code.buffer)+PX_strlen(lexer.Sources+PX_LexerGetState(&lexer).offset-1)+1;
 								exchangeBuffer=(px_char *)MP_Malloc(lib->mp,allocsize);
 
 								if (exchangeBuffer==PX_NULL)
@@ -240,10 +240,10 @@ static px_bool PX_ScriptParseInclude(px_string *codes,PX_SCRIPT_LIBRARY *lib,px_
 									goto _ERROR;
 								}
 
-								px_memcpy(exchangeBuffer,codes->buffer,lexerState.offset);
+								PX_memcpy(exchangeBuffer,codes->buffer,lexerState.offset);
 								exchangeBuffer[lexerState.offset]=0;
-								px_strcat(exchangeBuffer,PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->code.buffer);
-								px_strcat(exchangeBuffer,lexer.Sources+PX_LexerGetState(&lexer).offset-1);
+								PX_strcat(exchangeBuffer,PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->code.buffer);
+								PX_strcat(exchangeBuffer,lexer.Sources+PX_LexerGetState(&lexer).offset-1);
 
 								PX_StringClear(codes);
 								PX_StringCat(codes,exchangeBuffer);
@@ -342,7 +342,7 @@ static px_bool PX_ScriptParseDefine(px_string *codes,PX_SCRIPT_LIBRARY *lib,px_c
 		}
 		if (type==PX_LEXER_LEXEME_TYPE_TOKEN)
 		{
-			if (px_strequ(lexer.CurLexeme.buffer,"#DEFINE"))
+			if (PX_strequ(lexer.CurLexeme.buffer,"#DEFINE"))
 			{
 				startIndex=lexer.SourceOffset-7;
 				if (PX_ScriptTranslatorNextToken(&lexer)!=PX_LEXER_LEXEME_TYPE_TOKEN)
@@ -406,12 +406,12 @@ static px_bool PX_ScriptParseDefine(px_string *codes,PX_SCRIPT_LIBRARY *lib,px_c
 		{
 			for (i=0;i<defines.size;i++)
 			{
-				if (px_strequ(lexer.CurLexeme.buffer,PX_VECTORAT(PX_SCRIPT_TRANSLATOR_DEFINE_ST,&defines,i)->name.buffer))
+				if (PX_strequ(lexer.CurLexeme.buffer,PX_VECTORAT(PX_SCRIPT_TRANSLATOR_DEFINE_ST,&defines,i)->name.buffer))
 				{
-					startIndex=lexer.SourceOffset-px_strlen(lexer.CurLexeme.buffer);
+					startIndex=lexer.SourceOffset-PX_strlen(lexer.CurLexeme.buffer);
 					PX_StringReplaceRange(codes,startIndex,lexer.SourceOffset-1,PX_VECTORAT(PX_SCRIPT_TRANSLATOR_DEFINE_ST,&defines,i)->token.buffer);
 					PX_LexerSetSourcePointer(&lexer,codes->buffer);
-					lexer.SourceOffset=startIndex+px_strlen(PX_VECTORAT(PX_SCRIPT_TRANSLATOR_DEFINE_ST,&defines,i)->token.buffer);
+					lexer.SourceOffset=startIndex+PX_strlen(PX_VECTORAT(PX_SCRIPT_TRANSLATOR_DEFINE_ST,&defines,i)->token.buffer);
 					break;
 				}
 			}
@@ -453,20 +453,20 @@ _ERROR:
 static px_bool PX_ScriptParseIsValidToken(px_char *token)
 {
 	px_int i;
-	if (token[0]=='\0'||px_charIsNumeric(token[0]))
+	if (token[0]=='\0'||PX_charIsNumeric(token[0]))
 	{
 		return PX_FALSE;
 	}
 
 	for(i=0;i<sizeof(PX_Script_Keywords)/sizeof(px_char *);i++)
-	if (px_strequ(token,PX_Script_Keywords[i]))
+	if (PX_strequ(token,PX_Script_Keywords[i]))
 	{
 		return PX_FALSE;
 	}
 
 	while (*token)
 	{
-		if ((*token>='A'&&*token<='Z')||(*token>='a'&&*token<='z')||*token=='_'||*token==':'||px_charIsNumeric(*token))
+		if ((*token>='A'&&*token<='Z')||(*token>='a'&&*token<='z')||*token=='_'||*token==':'||PX_charIsNumeric(*token))
 		{
 			token++;
 			continue;
@@ -532,7 +532,7 @@ static PX_SCRIPT_SET *PX_ScriptParseGetSetByIndex(PX_SCRIPT_Analysis *analysis,p
 }
 static px_char PX_ScriptParseGetOpLevel(px_char *op,px_bool binary)
 {
-	if (px_strlen(op)==1)
+	if (PX_strlen(op)==1)
 	{
 		switch(*op)
 		{
@@ -580,43 +580,43 @@ static px_char PX_ScriptParseGetOpLevel(px_char *op,px_bool binary)
 	}
 	else
 	{
-		if (px_strequ(op,">="))
+		if (PX_strequ(op,">="))
 		{
 			return 6;
 		}
-		if (px_strequ(op,"<="))
+		if (PX_strequ(op,"<="))
 		{
 			return 6;
 		}
-		if (px_strequ(op,"<<"))
+		if (PX_strequ(op,"<<"))
 		{
 			return 5;
 		}
-		if (px_strequ(op,">>"))
+		if (PX_strequ(op,">>"))
 		{
 			return 5;
 		}
-		if (px_strequ(op,"&&"))
+		if (PX_strequ(op,"&&"))
 		{
 			return 11;
 		}
-		if (px_strequ(op,"||"))
+		if (PX_strequ(op,"||"))
 		{
 			return 12;
 		}
-		if (px_strequ(op,"=="))
+		if (PX_strequ(op,"=="))
 		{
 			return 7;
 		}
-		if (px_strequ(op,"!="))
+		if (PX_strequ(op,"!="))
 		{
 			return 7;
 		}
-		if (px_strequ(op,"++"))
+		if (PX_strequ(op,"++"))
 		{
 			return 2;
 		}
-		if (px_strequ(op,"--"))
+		if (PX_strequ(op,"--"))
 		{
 			return 2;
 		}
@@ -636,7 +636,7 @@ static px_bool PX_ScriptParse_AST_PushToken(PX_SCRIPT_Analysis *analysis,px_vect
 		for (i=0;i<_inset->members.size;i++)
 		{
 			psetmem=PX_VECTORAT(PX_SCRIPT_SETMEMBER,&_inset->members,i);
-			if (px_strequ(psetmem->defvar.Mnemonic.buffer,atom.code.buffer))
+			if (PX_strequ(psetmem->defvar.Mnemonic.buffer,atom.code.buffer))
 			{
 				*_outset=PX_NULL;
 				switch(psetmem->defvar.type)
@@ -795,7 +795,7 @@ static px_bool PX_ScriptParse_AST_PushToken(PX_SCRIPT_Analysis *analysis,px_vect
 			for (i=0;i<analysis->v_variableStackTable.size;i++)
 			{
 				pvar=PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variableStackTable,i);
-				if (px_strequ(pvar->Mnemonic.buffer,atom.code.buffer))
+				if (PX_strequ(pvar->Mnemonic.buffer,atom.code.buffer))
 				{
 					operand.region=PX_SCRIPT_VARIABLE_REGION_LOCAL;
 					goto _CONTINUE;
@@ -805,7 +805,7 @@ static px_bool PX_ScriptParse_AST_PushToken(PX_SCRIPT_Analysis *analysis,px_vect
 			for (i=0;i<analysis->v_variablesGlobalTable.size;i++)
 			{
 				pvar=PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variablesGlobalTable,i);
-				if (px_strequ(pvar->Mnemonic.buffer,atom.code.buffer))
+				if (PX_strequ(pvar->Mnemonic.buffer,atom.code.buffer))
 				{
 					operand.region=PX_SCRIPT_VARIABLE_REGION_GLOBAL;
 					goto _CONTINUE;
@@ -961,12 +961,12 @@ static px_bool PX_ScriptParse_AST_PushToken(PX_SCRIPT_Analysis *analysis,px_vect
 		}
 		else
 		{
-			if (!px_strIsNumeric(atom.code.buffer))
+			if (!PX_strIsNumeric(atom.code.buffer))
 			{
 				return PX_FALSE;
 			}
 			operand.region=PX_SCRIPT_VARIABLE_REGION_GLOBAL;
-			if (px_strIsFloat(atom.code.buffer))
+			if (PX_strIsFloat(atom.code.buffer))
 			{
 				operand.operandType=PX_SCRIPT_AST_OPERAND_TYPE_FLOAT_CONST;
 				operand._float=PX_atof(atom.code.buffer);
@@ -1169,7 +1169,7 @@ static PX_SCRIPT_SET *PX_ScriptParseGetSetInfo(PX_SCRIPT_Analysis *analysis,px_c
 	for (i=0;i<analysis->v_sets.size;i++)
 	{
 		pset=PX_VECTORAT(PX_SCRIPT_SET,&analysis->v_sets,i);
-		if (px_strequ(name,pset->Name.buffer))
+		if (PX_strequ(name,pset->Name.buffer))
 		{
 			return pset;
 		}
@@ -1183,7 +1183,7 @@ static px_int PX_ScriptParseGetSetIndex(PX_SCRIPT_Analysis *analysis,px_char *na
 	for (i=0;i<analysis->v_sets.size;i++)
 	{
 		pset=PX_VECTORAT(PX_SCRIPT_SET,&analysis->v_sets,i);
-		if (px_strequ(name,pset->Name.buffer))
+		if (PX_strequ(name,pset->Name.buffer))
 		{
 			return i;
 		}
@@ -5968,7 +5968,7 @@ static px_bool PX_ScriptParseExpressionStream(PX_SCRIPT_Analysis *analysis,px_ve
 			for (i=0;i<analysis->v_functions.size;i++)
 			{
 				pfunc=PX_VECTORAT(PX_SCRIPT_FUNCTION,&analysis->v_functions,i);
-				if (px_strequ(pfunc->name,pVec[*offset].code.buffer))
+				if (PX_strequ(pfunc->name,pVec[*offset].code.buffer))
 				{
 					break;
 				}
@@ -6560,7 +6560,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 
 	PX_SCRIPT_EXPR_STREAM Op;
 
-	if (px_strlen(expr)==0)
+	if (PX_strlen(expr)==0)
 	{
 		retOperand->operandType=PX_SCRIPT_AST_OPERAND_TYPE_VOID;
 		retOperand->region=PX_SCRIPT_VARIABLE_REGION_GLOBAL;
@@ -6633,7 +6633,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 		{
 			//////////////////////////////////////////////////////////////////////////
 			//key word
-			if (px_strequ(lexer.CurLexeme.buffer,"STRLEN"))
+			if (PX_strequ(lexer.CurLexeme.buffer,"STRLEN"))
 			{
 				if ((accept_type&PX_SCRIPT_EXPRESSION_ACCEPT_SINGLE)==0)
 				{
@@ -6651,7 +6651,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 				PX_StringCat(&Op.code,lexer.CurLexeme.buffer);
 				PX_VectorPushback(&stream,&Op);
 			}
-			else if (px_strequ(lexer.CurLexeme.buffer,"MEMLEN"))
+			else if (PX_strequ(lexer.CurLexeme.buffer,"MEMLEN"))
 			{
 				if ((accept_type&PX_SCRIPT_EXPRESSION_ACCEPT_SINGLE)==0)
 				{
@@ -6670,7 +6670,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 				PX_StringCat(&Op.code,lexer.CurLexeme.buffer);
 				PX_VectorPushback(&stream,&Op);
 			}
-			else if (px_strequ(lexer.CurLexeme.buffer,"SIN"))
+			else if (PX_strequ(lexer.CurLexeme.buffer,"SIN"))
 			{
 				if ((accept_type&PX_SCRIPT_EXPRESSION_ACCEPT_SINGLE)==0)
 				{
@@ -6689,7 +6689,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 				PX_StringCat(&Op.code,lexer.CurLexeme.buffer);
 				PX_VectorPushback(&stream,&Op);
 			}
-			else if (px_strequ(lexer.CurLexeme.buffer,"COS"))
+			else if (PX_strequ(lexer.CurLexeme.buffer,"COS"))
 			{
 				if ((accept_type&PX_SCRIPT_EXPRESSION_ACCEPT_SINGLE)==0)
 				{
@@ -6708,7 +6708,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 				PX_StringCat(&Op.code,lexer.CurLexeme.buffer);
 				PX_VectorPushback(&stream,&Op);
 			}
-			else if (px_strequ(lexer.CurLexeme.buffer,"INT"))
+			else if (PX_strequ(lexer.CurLexeme.buffer,"INT"))
 			{
 				if ((accept_type&PX_SCRIPT_EXPRESSION_ACCEPT_SINGLE)==0)
 				{
@@ -6727,7 +6727,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 				PX_StringCat(&Op.code,lexer.CurLexeme.buffer);
 				PX_VectorPushback(&stream,&Op);
 			}
-			else if (px_strequ(lexer.CurLexeme.buffer,"FLOAT"))
+			else if (PX_strequ(lexer.CurLexeme.buffer,"FLOAT"))
 			{
 				if ((accept_type&PX_SCRIPT_EXPRESSION_ACCEPT_SINGLE)==0)
 				{
@@ -6746,7 +6746,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 				PX_StringCat(&Op.code,lexer.CurLexeme.buffer);
 				PX_VectorPushback(&stream,&Op);
 			}
-			else if (px_strequ(lexer.CurLexeme.buffer,"STRING"))
+			else if (PX_strequ(lexer.CurLexeme.buffer,"STRING"))
 			{
 				if ((accept_type&PX_SCRIPT_EXPRESSION_ACCEPT_SINGLE)==0)
 				{
@@ -6764,7 +6764,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 				PX_StringCat(&Op.code,lexer.CurLexeme.buffer);
 				PX_VectorPushback(&stream,&Op);
 			}
-			else if (px_strequ(lexer.CurLexeme.buffer,"MEMORY"))
+			else if (PX_strequ(lexer.CurLexeme.buffer,"MEMORY"))
 			{
 				if ((accept_type&PX_SCRIPT_EXPRESSION_ACCEPT_SINGLE)==0)
 				{
@@ -6814,7 +6814,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 				PX_LexerSetState(state);
 
 			}
-			else if(px_strIsNumeric(lexer.CurLexeme.buffer))
+			else if(PX_strIsNumeric(lexer.CurLexeme.buffer))
 			{
 				accept_type=PX_SCRIPT_EXPRESSION_ACCEPT_BINARY|PX_SCRIPT_EXPRESSION_ACCEPT_BRACKET_END;
 				Op.type=PX_SCRIPT_TRANSLATOR_EXPRESSION_TOKEN;
@@ -7579,7 +7579,7 @@ static px_bool PX_ScriptParseExpression(PX_SCRIPT_Analysis *analysis,px_char *ex
 	PX_VectorPushback(&stream,&Op);
 	PX_StringCat(out,";--------");
 
-	for(i=0;i<px_strlen(expr);i++)
+	for(i=0;i<PX_strlen(expr);i++)
 	{
 		if(expr[i]=='\r'||expr[i]=='\n')
 			expr[i]=' ';
@@ -7637,19 +7637,19 @@ static px_bool PX_ScriptParseVar(PX_SCRIPT_Analysis *analysis)
 		return PX_FALSE;
 	}
 
-	if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT))
+	if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT))
 	{
 		resType=PX_SCRIPT_PARSER_VAR_TYPE_INT;
 	}
-	else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT))
+	else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT))
 	{
 		resType=PX_SCRIPT_PARSER_VAR_TYPE_FLOAT;
 	}
-	else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING))
+	else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING))
 	{
 		resType=PX_SCRIPT_PARSER_VAR_TYPE_STRING;
 	}
-	else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY))
+	else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY))
 	{
 		resType=PX_SCRIPT_PARSER_VAR_TYPE_MEMORY;
 	}
@@ -7660,7 +7660,7 @@ static px_bool PX_ScriptParseVar(PX_SCRIPT_Analysis *analysis)
 
 	while(PX_TRUE)
 	{
-		px_memset(&variable,0,sizeof(variable));
+		PX_memset(&variable,0,sizeof(variable));
 		variable.bParam=PX_FALSE;
 		variable.bInitialized=PX_FALSE;
 		variable.BeginIndex=-1;
@@ -7761,7 +7761,7 @@ static px_bool PX_ScriptParseVar(PX_SCRIPT_Analysis *analysis)
 				goto _ERROR;
 			}
 
-			if(!px_strIsNumeric(analysis->lexer.CurLexeme.buffer))
+			if(!PX_strIsNumeric(analysis->lexer.CurLexeme.buffer))
 			{
 				PX_ScriptTranslatorError(&analysis->lexer,"Invalid var token");
 			}
@@ -7812,7 +7812,7 @@ static px_bool PX_ScriptParseVar(PX_SCRIPT_Analysis *analysis)
 				PX_StringCat(&variable.GlobalInitializeValue,analysis->lexer.CurLexeme.buffer);
 			}
 
-			if (px_strlen(variable.GlobalInitializeValue.buffer)==0)
+			if (PX_strlen(variable.GlobalInitializeValue.buffer)==0)
 			{
 				PX_ScriptTranslatorError(&analysis->lexer,"Error Expression.");
 				PX_StringFree(&variable.Mnemonic);
@@ -7831,7 +7831,7 @@ static px_bool PX_ScriptParseVar(PX_SCRIPT_Analysis *analysis)
 
 			for (i=0;i<analysis->v_variableStackTable.size;i++)
 			{
-				if (px_strequ(variable.Mnemonic.buffer,PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variableStackTable,i)->Mnemonic.buffer))
+				if (PX_strequ(variable.Mnemonic.buffer,PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variableStackTable,i)->Mnemonic.buffer))
 				{
 					PX_ScriptTranslatorError(&analysis->lexer,"variable redefined.");
 					PX_StringFree(&variable.Mnemonic);
@@ -7847,7 +7847,7 @@ static px_bool PX_ScriptParseVar(PX_SCRIPT_Analysis *analysis)
 		{
 			for (i=0;i<analysis->v_variablesGlobalTable.size;i++)
 			{
-				if (px_strequ(variable.Mnemonic.buffer,PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variablesGlobalTable,i)->Mnemonic.buffer))
+				if (PX_strequ(variable.Mnemonic.buffer,PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variablesGlobalTable,i)->Mnemonic.buffer))
 				{
 					PX_ScriptTranslatorError(&analysis->lexer,"variable redefined.");
 					PX_StringFree(&variable.Mnemonic);
@@ -7982,7 +7982,7 @@ static px_bool PX_ScriptParseSet(PX_SCRIPT_Analysis *analysis)
 				goto _ERROR;
 			}
 
-			if(!px_strIsNumeric(analysis->lexer.CurLexeme.buffer))
+			if(!PX_strIsNumeric(analysis->lexer.CurLexeme.buffer))
 			{
 				PX_ScriptTranslatorError(&analysis->lexer,"Invalid var token");
 			}
@@ -8025,7 +8025,7 @@ static px_bool PX_ScriptParseSet(PX_SCRIPT_Analysis *analysis)
 
 			for (i=0;i<analysis->v_variableStackTable.size;i++)
 			{
-				if (px_strequ(variable.Mnemonic.buffer,PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variableStackTable,i)->Mnemonic.buffer))
+				if (PX_strequ(variable.Mnemonic.buffer,PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variableStackTable,i)->Mnemonic.buffer))
 				{
 					PX_ScriptTranslatorError(&analysis->lexer,"variable redefined.");
 					PX_StringFree(&variable.Mnemonic);
@@ -8051,7 +8051,7 @@ static px_bool PX_ScriptParseSet(PX_SCRIPT_Analysis *analysis)
 		{
 			for (i=0;i<analysis->v_variablesGlobalTable.size;i++)
 			{
-				if (px_strequ(variable.Mnemonic.buffer,PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variablesGlobalTable,i)->Mnemonic.buffer))
+				if (PX_strequ(variable.Mnemonic.buffer,PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis->v_variablesGlobalTable,i)->Mnemonic.buffer))
 				{
 					PX_ScriptTranslatorError(&analysis->lexer,"variable redefined.");
 					PX_StringFree(&variable.Mnemonic);
@@ -8214,7 +8214,7 @@ px_bool PX_ScriptParseSetDefine(PX_SCRIPT_Analysis *analysis)
 							goto _ERROR;
 						}
 
-						if(!px_strIsNumeric(analysis->lexer.CurLexeme.buffer))
+						if(!PX_strIsNumeric(analysis->lexer.CurLexeme.buffer))
 						{
 							PX_ScriptTranslatorError(&analysis->lexer,"Invalid var token");
 							PX_StringFree(&member.defvar.Mnemonic);
@@ -8301,19 +8301,19 @@ px_bool PX_ScriptParseSetDefine(PX_SCRIPT_Analysis *analysis)
 				return PX_FALSE;
 			}
 
-			if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT))
+			if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT))
 			{
 				member.defvar.type=PX_SCRIPT_PARSER_VAR_TYPE_INT;
 			}
-			else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT))
+			else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT))
 			{
 				member.defvar.type=PX_SCRIPT_PARSER_VAR_TYPE_FLOAT;
 			}
-			else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING))
+			else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING))
 			{
 				member.defvar.type=PX_SCRIPT_PARSER_VAR_TYPE_STRING;
 			}
-			else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY))
+			else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY))
 			{
 				member.defvar.type=PX_SCRIPT_PARSER_VAR_TYPE_MEMORY;
 			}
@@ -8419,7 +8419,7 @@ px_bool PX_ScriptParseSetDefine(PX_SCRIPT_Analysis *analysis)
 					goto _ERROR;
 				}
 
-				if(!px_strIsNumeric(analysis->lexer.CurLexeme.buffer))
+				if(!PX_strIsNumeric(analysis->lexer.CurLexeme.buffer))
 				{
 					PX_ScriptTranslatorError(&analysis->lexer,"Invalid var token");
 					PX_StringFree(&member.defvar.Mnemonic);
@@ -8547,23 +8547,23 @@ px_bool PX_ScriptParseFunctionDefined(PX_SCRIPT_Analysis *analysis,PX_SCRIPT_TRA
 		return PX_FALSE;
 	}
 
-	if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT))
+	if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT))
 	{
 		func.retType=PX_SCRIPT_PARSER_VAR_TYPE_INT;
 	}
-	else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT))
+	else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT))
 	{
 		func.retType=PX_SCRIPT_PARSER_VAR_TYPE_FLOAT;
 	}
-	else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING))
+	else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING))
 	{
 		func.retType=PX_SCRIPT_PARSER_VAR_TYPE_STRING;
 	}
-	else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY))
+	else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY))
 	{
 		func.retType=PX_SCRIPT_PARSER_VAR_TYPE_MEMORY;
 	}
-	else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_VOID))
+	else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_VOID))
 	{
 		func.retType=PX_SCRIPT_PARSER_VAR_TYPE_VOID;
 	}
@@ -8624,7 +8624,7 @@ px_bool PX_ScriptParseFunctionDefined(PX_SCRIPT_Analysis *analysis,PX_SCRIPT_TRA
 	{
 		return PX_FALSE;
 	}
-	px_strcpy(func.name,analysis->lexer.CurLexeme.buffer,PX_SCRIPT_FUNCTION_NAME_MAX_LEN);
+	PX_strcpy(func.name,analysis->lexer.CurLexeme.buffer,PX_SCRIPT_FUNCTION_NAME_MAX_LEN);
 	if ((PX_ScriptTranslatorNextToken(&analysis->lexer))!=PX_LEXER_LEXEME_TYPE_DELIMITER||analysis->lexer.Symbol!='(')
 	{
 		goto _ERROR;
@@ -8644,19 +8644,19 @@ px_bool PX_ScriptParseFunctionDefined(PX_SCRIPT_Analysis *analysis,PX_SCRIPT_TRA
 		}
 		fvar.size=1;
 		//////////////////////////////////////////////////////////////////////////
-		if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT))
+		if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT))
 		{
 			fvar.type=PX_SCRIPT_PARSER_VAR_TYPE_INT;
 		}
-		else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT))
+		else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT))
 		{
 			fvar.type=PX_SCRIPT_PARSER_VAR_TYPE_FLOAT;
 		}
-		else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING))
+		else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING))
 		{
 			fvar.type=PX_SCRIPT_PARSER_VAR_TYPE_STRING;
 		}
-		else if (px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY))
+		else if (PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY))
 		{
 			fvar.type=PX_SCRIPT_PARSER_VAR_TYPE_MEMORY;
 		}
@@ -8748,7 +8748,7 @@ px_bool PX_ScriptParseFunctionDefined(PX_SCRIPT_Analysis *analysis,PX_SCRIPT_TRA
 	for (i=0;i<analysis->v_functions.size;i++)
 	{
 		pfunc=PX_VECTORAT(PX_SCRIPT_FUNCTION,&analysis->v_functions,i);
-		if (px_strequ(pfunc->name,func.name))
+		if (PX_strequ(pfunc->name,func.name))
 		{
 			if (pfunc->parametersCount!=func.parametersCount)
 			{
@@ -9042,7 +9042,7 @@ px_bool PX_ScriptParseLastCodeblockEnd(PX_SCRIPT_Analysis *analysis)
 			//else
 			state=PX_LexerGetState(&analysis->lexer);
 			type=PX_ScriptTranslatorNextTokenSN(&analysis->lexer);
-			if (type==PX_LEXER_LEXEME_TYPE_TOKEN&&px_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_ELSE))
+			if (type==PX_LEXER_LEXEME_TYPE_TOKEN&&PX_strequ(analysis->lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_ELSE))
 			{
 				//generate code
 				PX_StringInit(analysis->mp,&fmrString);
@@ -9323,7 +9323,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 
 	for (i=0;i<lib->codeLibraries.size;i++)
 	{
-		if (px_strequ(name,PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->name.buffer))
+		if (PX_strequ(name,PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->name.buffer))
 		{
 			PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->bInclude=PX_TRUE;
 			PX_StringCopy(&codes,&PX_VECTORAT(PX_SCRIPT_CODE,&lib->codeLibraries,i)->code);
@@ -9411,21 +9411,21 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 		//////////////////////////////////////////////////////////////////////////
 		///Runtime
 		//////////////////////////////////////////////////////////////////////////
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_RUNTIME))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_RUNTIME))
 		{
 			type=PX_ScriptTranslatorNextToken(&analysis.lexer);
 			if (type!=PX_LEXER_LEXEME_TYPE_TOKEN)
 			{
 				goto _ERROR;
 			}
-			if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_STACK))
+			if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_STACK))
 			{
 				type=PX_ScriptTranslatorNextToken(&analysis.lexer);
 				if (type!=PX_LEXER_LEXEME_TYPE_TOKEN)
 				{
 					goto _ERROR;
 				}
-				if (!px_strIsInt(analysis.lexer.CurLexeme.buffer))
+				if (!PX_strIsInt(analysis.lexer.CurLexeme.buffer))
 				{
 					goto _ERROR;
 				}
@@ -9436,14 +9436,14 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 					goto _ERROR;
 				}
 			}
-			if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_THREAD))
+			if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_THREAD))
 			{
 				type=PX_ScriptTranslatorNextToken(&analysis.lexer);
 				if (type!=PX_LEXER_LEXEME_TYPE_TOKEN)
 				{
 					goto _ERROR;
 				}
-				if (!px_strIsInt(analysis.lexer.CurLexeme.buffer))
+				if (!PX_strIsInt(analysis.lexer.CurLexeme.buffer))
 				{
 					goto _ERROR;
 				}
@@ -9462,11 +9462,11 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 		///VAR
 		//////////////////////////////////////////////////////////////////////////
 		if ((pset=PX_ScriptParseGetSetInfo(&analysis,analysis.lexer.CurLexeme.buffer))!=PX_NULL||\
-			px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT)||\
-			px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT)||\
-			px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING)||\
-			px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_VOID)||\
-			px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY)
+			PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT)||\
+			PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT)||\
+			PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING)||\
+			PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_VOID)||\
+			PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY)
 			)
 		{	
 			if (isBeginExpression&&analysis.functionInside)
@@ -9508,7 +9508,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 				{
 					analysis.functionInside=PX_TRUE;
 					buildAstStruct.type=PX_SCRIPT_AST_STRUCTURE_TYPE_FUNCTION;
-					px_strcpy(buildAstStruct._func.name,analysis.currentFunc.name,sizeof(analysis.currentFunc.name));
+					PX_strcpy(buildAstStruct._func.name,analysis.currentFunc.name,sizeof(analysis.currentFunc.name));
 					PX_VectorPushback(&analysis.v_astStructure,&buildAstStruct);
 					isBeginExpression=PX_FALSE;
 					continue;
@@ -9561,7 +9561,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 		//////////////////////////////////////////////////////////////////////////
 		///SET DEFINE
 		//////////////////////////////////////////////////////////////////////////
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_SET))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_SET))
 		{	
 			if (analysis.functionInside)
 			{
@@ -9590,7 +9590,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 
 		//////////////////////////////////////////////////////////////////////////
 		// Host function define
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_HOST))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_HOST))
 		{
 			if (analysis.functionInside)
 			{
@@ -9601,11 +9601,11 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 			{
 				goto _ERROR;
 			}
-			if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT)||\
-				px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT)||\
-				px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING)||\
-				px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY)||\
-				px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_VOID)||\
+			if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT)||\
+				PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT)||\
+				PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING)||\
+				PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY)||\
+				PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_VOID)||\
 				PX_ScriptParseGetSetInfo(&analysis,analysis.lexer.CurLexeme.buffer)!=PX_NULL
 				)
 			{
@@ -9639,7 +9639,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 
 		//////////////////////////////////////////////////////////////////////////
 		// Export function define
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_EXPORT))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_EXPORT))
 		{
 			state=PX_LexerGetState(&analysis.lexer);
 
@@ -9652,11 +9652,11 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 				goto _ERROR;
 			}
 
-			if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT)||\
-				px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT)||\
-				px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING)||\
-				px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY)||\
-				px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_VOID)||\
+			if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_INT)||\
+				PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_FLOAT)||\
+				PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_STRING)||\
+				PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_MEMORY)||\
+				PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_VAR_VOID)||\
 				PX_ScriptParseGetSetInfo(&analysis,analysis.lexer.CurLexeme.buffer)!=PX_NULL
 				)
 			{
@@ -9675,7 +9675,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 			{
 				analysis.functionInside=PX_TRUE;
 				buildAstStruct.type=PX_SCRIPT_AST_STRUCTURE_TYPE_FUNCTION;
-				px_strcpy(buildAstStruct._func.name,analysis.currentFunc.name,sizeof(analysis.currentFunc.name));
+				PX_strcpy(buildAstStruct._func.name,analysis.currentFunc.name,sizeof(analysis.currentFunc.name));
 				PX_VectorPushback(&analysis.v_astStructure,&buildAstStruct);
 				isBeginExpression=PX_FALSE;
 				continue;
@@ -9709,7 +9709,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 		//////////////////////////////////////////////////////////////////////////
 		//IF
 		//////////////////////////////////////////////////////////////////////////
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_IF))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_IF))
 		{
 			if (!analysis.functionInside)
 			{
@@ -9778,7 +9778,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 		//WHILE
 		//////////////////////////////////////////////////////////////////////////
 
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_WHILE))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_WHILE))
 		{
 			if (!analysis.functionInside)
 			{
@@ -9853,7 +9853,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 		//_ASM
 		//////////////////////////////////////////////////////////////////////////
 		
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_ASM))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_ASM))
 		{
 			if (!analysis.functionInside)
 			{
@@ -9881,7 +9881,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 				{
 					pvar=PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis.v_variableStackTable,i);
 					if(pvar->type==PX_SCRIPT_PARSER_VAR_TYPE_INT||pvar->type==PX_SCRIPT_PARSER_VAR_TYPE_FLOAT||pvar->type==PX_SCRIPT_PARSER_VAR_TYPE_STRING||pvar->type==PX_SCRIPT_PARSER_VAR_TYPE_MEMORY)
-					if (px_strequ(pvar->Mnemonic.buffer,analysis.lexer.CurLexeme.buffer))
+					if (PX_strequ(pvar->Mnemonic.buffer,analysis.lexer.CurLexeme.buffer))
 					{
 						PX_StringFormat1(&fmrString,"LOCAL[%1]",PX_STRINGFORMAT_INT(pvar->BeginIndex));
 						PX_StringCat(&codes,fmrString.buffer);
@@ -9893,7 +9893,7 @@ px_bool PX_ScriptCompilerCompile(PX_SCRIPT_LIBRARY *lib,px_char *name,px_string 
 				{
 					pvar=PX_VECTORAT(PX_SCRIPT_VARIABLES,&analysis.v_variablesGlobalTable,i);
 					if(pvar->type==PX_SCRIPT_PARSER_VAR_TYPE_INT||pvar->type==PX_SCRIPT_PARSER_VAR_TYPE_FLOAT||pvar->type==PX_SCRIPT_PARSER_VAR_TYPE_STRING||pvar->type==PX_SCRIPT_PARSER_VAR_TYPE_MEMORY)
-					if (px_strequ(pvar->Mnemonic.buffer,analysis.lexer.CurLexeme.buffer))
+					if (PX_strequ(pvar->Mnemonic.buffer,analysis.lexer.CurLexeme.buffer))
 					{
 						PX_StringFormat1(&fmrString,"GLOBAL[%1]",PX_STRINGFORMAT_INT(pvar->BeginIndex));
 						PX_StringCat(&codes,fmrString.buffer);
@@ -9916,7 +9916,7 @@ _CONTINUE:
 		//FOR
 		//////////////////////////////////////////////////////////////////////////
 
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_FOR))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_FOR))
 		{
 			if (!analysis.functionInside)
 			{
@@ -10055,7 +10055,7 @@ _CONTINUE:
 		//////////////////////////////////////////////////////////////////////////
 		//COMPARE
 		//////////////////////////////////////////////////////////////////////////
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_COMPARE))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_COMPARE))
 		{
 			if (!analysis.functionInside)
 			{
@@ -10121,7 +10121,7 @@ _CONTINUE:
 		//////////////////////////////////////////////////////////////////////////
 		//WITH
 		//////////////////////////////////////////////////////////////////////////
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_WITH))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_WITH))
 		{
 			if (!analysis.functionInside)
 			{
@@ -10285,7 +10285,7 @@ _CONTINUE:
 		//break
 		//////////////////////////////////////////////////////////////////////////
 		
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_BREAK))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_BREAK))
 		{
 			type=PX_ScriptTranslatorNextToken(&analysis.lexer);
 			
@@ -10342,7 +10342,7 @@ _CONTINUE:
 		//continue
 		//////////////////////////////////////////////////////////////////////////
 
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_CONTINUE))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_CONTINUE))
 		{
 			type=PX_ScriptTranslatorNextToken(&analysis.lexer);
 
@@ -10388,7 +10388,7 @@ _CONTINUEOUT:
 		///////////////////////////////////////////////////////////////////////////
 		//Return
 		//////////////////////////////////////////////////////////////////////////
-		if (px_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_RETURN))
+		if (PX_strequ(analysis.lexer.CurLexeme.buffer,PX_SCRIPT_TRANSLATOR_KEYWORD_RETURN))
 		{
 			if (!analysis.functionInside)
 			{

@@ -61,7 +61,7 @@ px_void PX_huffmanCompress(px_byte *_in,px_uint input_size,px_byte *_out,px_uint
 	px_byte w_byte=0;
 	px_uchar w_byte_offset=0;
 
-	px_memset(nodes,0,sizeof(nodes));
+	PX_memset(nodes,0,sizeof(nodes));
 	for (i=0;i<256;i++)
 	{
 		nodes[i].data=(px_byte)i;
@@ -75,7 +75,7 @@ px_void PX_huffmanCompress(px_byte *_in,px_uint input_size,px_byte *_out,px_uint
 	{
 		 huffman_node s_nodes[256];
 		 PX_QuickSortAtom s_Atom[256];
-		 px_memcpy(s_nodes,nodes,sizeof(s_nodes));
+		 PX_memcpy(s_nodes,nodes,sizeof(s_nodes));
 		 for(i=0;i<256;i++)
 		 {
 			 s_Atom[i].power=(px_float)s_nodes[i].weight;
@@ -101,7 +101,7 @@ px_void PX_huffmanCompress(px_byte *_in,px_uint input_size,px_byte *_out,px_uint
 	w_size+=1;
 	if (_out)
 	{
-		px_memcpy(_out+1,&input_size,4);
+		PX_memcpy(_out+1,&input_size,4);
 	}
 	w_size+=4;
 
@@ -135,7 +135,7 @@ px_void PX_huffmanCompress(px_byte *_in,px_uint input_size,px_byte *_out,px_uint
 		}
 	}
 
-	px_memset(snodes,0,sizeof(snodes));
+	PX_memset(snodes,0,sizeof(snodes));
 	for (i=0;i<encodeNecessaryNodeCount;i++)
 	{
 		snodes[i].left=nodes[i].left;
@@ -151,11 +151,11 @@ px_void PX_huffmanCompress(px_byte *_in,px_uint input_size,px_byte *_out,px_uint
 	
 	if (_out)
 	{
-		px_memcpy(_out+w_size,snodes,encodeNecessaryNodeCount*sizeof(huffman_snode));
+		PX_memcpy(_out+w_size,snodes,encodeNecessaryNodeCount*sizeof(huffman_snode));
 	}
 	w_size+=encodeNecessaryNodeCount*sizeof(huffman_snode);
 	mapnode.len=0;
-	px_memset(&mapnode.encode,0,sizeof(mapnode.encode));
+	PX_memset(&mapnode.encode,0,sizeof(mapnode.encode));
 	px_huffmanTraversalTree(nodes,nodes,mapnode,huffmanMap);
 
 	//encoding
@@ -213,7 +213,7 @@ px_void PX_huffmanDecompress(px_byte *_in,px_uint input_size,px_byte *_out,px_ui
 	{
 		//only one node
 		if(_out)
-		px_memset(_out,pheader->data,datasize);
+		PX_memset(_out,pheader->data,datasize);
 	}
 	
 	leaf=_in[0];

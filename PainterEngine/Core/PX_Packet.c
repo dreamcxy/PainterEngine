@@ -27,7 +27,7 @@ px_bool PX_PacketCompress(px_byte *_in,px_uint input_size,px_byte *_out,px_uint 
 	}
 
 	pHeader->algorithm=algorithm;
-	px_memcpy(pHeader->magic,"PACK",4);
+	PX_memcpy(pHeader->magic,"PACK",4);
 	pHeader->CRC=PX_crc32(_in,input_size);
 
 	switch (algorithm)

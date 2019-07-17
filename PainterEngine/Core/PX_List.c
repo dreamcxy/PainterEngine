@@ -15,7 +15,7 @@ px_void *PX_ListPush(px_list *list,px_void *data,px_int size)
 	{
 		list->head=(px_list_node *)MP_Malloc(list->mp,sizeof(px_list_node));
 		list->head->pdata=MP_Malloc(list->mp,size);
-		px_memcpy(list->head->pdata,data,size);
+		PX_memcpy(list->head->pdata,data,size);
 		list->head->pnext=PX_NULL;
 		list->head->ppre=PX_NULL;
 		list->end=list->head;
@@ -26,7 +26,7 @@ px_void *PX_ListPush(px_list *list,px_void *data,px_int size)
 	{
 		node=(px_list_node *)MP_Malloc(list->mp,sizeof(px_list_node));
 		node->pdata=MP_Malloc(list->mp,size);
-		px_memcpy(node->pdata,data,size);
+		PX_memcpy(node->pdata,data,size);
 		node->pnext=PX_NULL;
 		node->ppre=list->end;
 		list->end->pnext=node;

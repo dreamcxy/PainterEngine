@@ -48,7 +48,7 @@ px_bool PX_ScriptVM_InstanceInit(PX_ScriptVM_Instance *Ins,px_memorypool *mp,px_
 		return PX_FALSE;
 	}
 
-	if (!px_memequ(header,"PASM",4))
+	if (!PX_memequ(header,"PASM",4))
 	{
 		PX_SCRIPT_VM_LOG("Invalid Header");
 		return PX_FALSE;
@@ -74,20 +74,20 @@ px_bool PX_ScriptVM_InstanceInit(PX_ScriptVM_Instance *Ins,px_memorypool *mp,px_
 
 	for (i=0;i<Ins->maxThreadCount;i++)
 	{
-		px_memset(Ins->pThread,0,sizeof(PX_ScriptVM_InstanceThread)*Ins->maxThreadCount);
+		PX_memset(Ins->pThread,0,sizeof(PX_ScriptVM_InstanceThread)*Ins->maxThreadCount);
 		Ins->pThread[i].Activated=PX_FALSE;
 		Ins->pThread[i].suspend=PX_FALSE;
 		Ins->pThread[i].user_runtime_data=PX_NULL;
 		for (j=0;j<PX_SCRIPTVM_REG_COUNT;j++)
 		{
-			px_memset(&Ins->pThread[i].R[j],0,sizeof(PX_SCRIPTVM_VARIABLE));
+			PX_memset(&Ins->pThread[i].R[j],0,sizeof(PX_SCRIPTVM_VARIABLE));
 			Ins->pThread[i].R[j].type=PX_SCRIPTVM_VARIABLE_TYPE_INT;
 		}
 	}
 
 	for (i=0;i<Ins->VM_memsize;i++)
 	{
-		px_memset(&Ins->_mem[i],0,sizeof(PX_SCRIPTVM_VARIABLE));
+		PX_memset(&Ins->_mem[i],0,sizeof(PX_SCRIPTVM_VARIABLE));
 		Ins->_mem[i].type=PX_SCRIPTVM_VARIABLE_TYPE_INT;
 	}
 
@@ -96,7 +96,7 @@ px_bool PX_ScriptVM_InstanceInit(PX_ScriptVM_Instance *Ins,px_memorypool *mp,px_
 	Ins->hostCount=header->hostCount;
 	Ins->_func=PX_NULL;
 	Ins->_host=PX_NULL;
-	px_memset(Ins->signal,0,sizeof(Ins->signal));
+	PX_memset(Ins->signal,0,sizeof(Ins->signal));
 
 	if (Ins->funcCount!=0)
 	{
@@ -108,7 +108,7 @@ px_bool PX_ScriptVM_InstanceInit(PX_ScriptVM_Instance *Ins,px_memorypool *mp,px_
 		pfunc=(PX_SCRIPT_EXPORT_FUNCTION *)(code+header->oftfunc);
 		for (i=0;i<Ins->funcCount;i++)
 		{
-			px_memcpy(&Ins->_func[i],&pfunc[i],sizeof(PX_SCRIPT_EXPORT_FUNCTION));
+			PX_memcpy(&Ins->_func[i],&pfunc[i],sizeof(PX_SCRIPT_EXPORT_FUNCTION));
 		}
 	}
 	
@@ -119,11 +119,11 @@ px_bool PX_ScriptVM_InstanceInit(PX_ScriptVM_Instance *Ins,px_memorypool *mp,px_
 			PX_SCRIPT_VM_LOG("Out of Memory");
 			return PX_FALSE;
 		}
-		px_memset(Ins->_host,0,sizeof(PX_SCRIPT_ASM_HOST_NODE)*Ins->hostCount);
+		PX_memset(Ins->_host,0,sizeof(PX_SCRIPT_ASM_HOST_NODE)*Ins->hostCount);
 		phost=(PX_SCRIPT_ASM_HOST_NODE *)(code+header->ofthost);
 		for (i=0;i<Ins->hostCount;i++)
 		{
-			px_memcpy(&Ins->_host[i],&phost[i],sizeof(PX_SCRIPT_ASM_HOST_NODE));
+			PX_memcpy(&Ins->_host[i],&phost[i],sizeof(PX_SCRIPT_ASM_HOST_NODE));
 			Ins->_host[i].map=PX_NULL;
 		}
 	}
@@ -137,13 +137,13 @@ px_bool PX_ScriptVM_InstanceInit(PX_ScriptVM_Instance *Ins,px_memorypool *mp,px_
 	
 
 	Ins->_string=(px_char *)MP_Malloc(mp,header->stringSize);
-	px_memcpy(Ins->_string,code+header->oftString,header->stringSize);
+	PX_memcpy(Ins->_string,code+header->oftString,header->stringSize);
 
 	Ins->_memory=(px_byte *)MP_Malloc(mp,header->memsize);
-	px_memcpy(Ins->_memory,code+header->oftmem,header->memsize);
+	PX_memcpy(Ins->_memory,code+header->oftmem,header->memsize);
 
 	Ins->_bin=(px_byte *)MP_Malloc(mp,header->binsize);
-	px_memcpy(Ins->_bin,code+header->oftbin,header->binsize);
+	PX_memcpy(Ins->_bin,code+header->oftbin,header->binsize);
 
 	
 
@@ -1308,7 +1308,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 			}
 			PX_SCRIPTVM_VaribaleFree(Ins,pVar);
 			pVar->type=PX_SCRIPTVM_VARIABLE_TYPE_INT;
-			pVar->_int=px_strlen(cVar._string.buffer);
+			pVar->_int=PX_strlen(cVar._string.buffer);
 			pT->IP+=(4+2*4);
 		}
 		break;
@@ -1379,7 +1379,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 
 			pVar->type=PX_SCRIPTVM_VARIABLE_TYPE_INT;
 
-			if(sVar._int<px_strlen(cVar._string.buffer))
+			if(sVar._int<PX_strlen(cVar._string.buffer))
 			pVar->_int=(px_uchar)cVar._string.buffer[sVar._int];
 			pT->IP+=(4+3*4);
 		}
@@ -1519,8 +1519,8 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 				}
 
 				PX_StringInitAlloc(Ins->mp,&newString,i);
-				px_memset(newString.buffer,0,i);
-				px_strcat(newString.buffer,pVar->_string.buffer);
+				PX_memset(newString.buffer,0,i);
+				PX_strcat(newString.buffer,pVar->_string.buffer);
 				PX_StringFree(&pVar->_string);
 				pVar->_string=newString;
 			}
@@ -1547,7 +1547,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 				goto _ERROR;
 			}
 			pVar->_int=-1;
-			pchar=px_strstr(sVar._string.buffer,tVar._string.buffer);
+			pchar=PX_strstr(sVar._string.buffer,tVar._string.buffer);
 			if (pchar)
 			{
 				pVar->_int=(px_uint)(pchar-sVar._string.buffer);
@@ -1624,7 +1624,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 				while(i<sVar._int)
 					i<<=1;
 				newBuffer=(px_byte *)MP_Malloc(Ins->mp,i);
-				px_memcpy(newBuffer,pVar->_memory.buffer,pVar->_memory.usedsize);
+				PX_memcpy(newBuffer,pVar->_memory.buffer,pVar->_memory.usedsize);
 				MP_Free(Ins->mp,pVar->_memory.buffer);
 				pVar->_memory.buffer=newBuffer;
 				pVar->_memory.allocsize=i;
@@ -1688,7 +1688,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 			pVar->_int=-1;
 			for(i=0;i<sVar._memory.usedsize-tVar._memory.usedsize+1;i++)
 			{
-				if (px_memequ(sVar._memory.buffer+i,tVar._memory.buffer,tVar._memory.usedsize))
+				if (PX_memequ(sVar._memory.buffer+i,tVar._memory.buffer,tVar._memory.usedsize))
 				{
 					pVar->_int=i;
 					pVar->type=PX_SCRIPTVM_VARIABLE_TYPE_INT;
@@ -1758,7 +1758,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 					
 					if(!PX_StringCat(&cVar._string,(px_char *)pVar->_memory.buffer)) goto _ERROR;
 
-					if(px_strlen((px_char *)pVar->_memory.buffer)==pVar->_memory.usedsize-1)
+					if(PX_strlen((px_char *)pVar->_memory.buffer)==pVar->_memory.usedsize-1)
 					PX_StringCatChar(&cVar._string,lastchar);
 
 					PX_MemoryFree(&pVar->_memory);
@@ -1792,7 +1792,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 				PX_ScriptVM_Error(Ins,"Out of memory access");
 				goto _ERROR;
 			}
-			px_memcpy(&Ins->_mem[cVar._int],&Ins->_mem[sVar._int],sizeof(PX_SCRIPTVM_VARIABLE)*tVar._int);
+			PX_memcpy(&Ins->_mem[cVar._int],&Ins->_mem[sVar._int],sizeof(PX_SCRIPTVM_VARIABLE)*tVar._int);
 
 			pT->IP+=(4+3*4);
 		}
@@ -1887,14 +1887,14 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 				else
 				{
 					if(cVar.type==PX_SCRIPTVM_VARIABLE_TYPE_STRING)
-						if (px_strequ(cVar._string.buffer,sVar._string.buffer))
+						if (PX_strequ(cVar._string.buffer,sVar._string.buffer))
 						{
 						pT->IP=tVar._int;
 						break;
 						}
 
 					if(cVar.type==PX_SCRIPTVM_VARIABLE_TYPE_MEMORY)
-						if (px_memequ(cVar._memory.buffer,sVar._memory.buffer,cVar._memory.usedsize))
+						if (PX_memequ(cVar._memory.buffer,sVar._memory.buffer,cVar._memory.usedsize))
 						{
 							pT->IP=tVar._int;
 							break;
@@ -1931,14 +1931,14 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 				else
 				{
 						if(cVar.type==PX_SCRIPTVM_VARIABLE_TYPE_STRING)
-							if (!px_strequ(cVar._string.buffer,sVar._string.buffer))
+							if (!PX_strequ(cVar._string.buffer,sVar._string.buffer))
 							{
 								pT->IP=tVar._int;
 								break;
 							}
 
 						if(cVar.type==PX_SCRIPTVM_VARIABLE_TYPE_MEMORY)
-							if (!px_memequ(cVar._memory.buffer,sVar._memory.buffer,cVar._memory.usedsize))
+							if (!PX_memequ(cVar._memory.buffer,sVar._memory.buffer,cVar._memory.usedsize))
 							{
 								pT->IP=tVar._int;
 								break;
@@ -2175,7 +2175,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 				else
 				{
 					if(sVar.type==PX_SCRIPTVM_VARIABLE_TYPE_STRING)
-						if (px_strequ(sVar._string.buffer,tVar._string.buffer))
+						if (PX_strequ(sVar._string.buffer,tVar._string.buffer))
 						{
 							pVar->_int=1;
 							pT->IP+=(4+3*4);
@@ -2184,7 +2184,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 
 
 					if(sVar.type==PX_SCRIPTVM_VARIABLE_TYPE_MEMORY)
-						if ((sVar._memory.usedsize==tVar._memory.usedsize)&&px_memequ(sVar._memory.buffer,tVar._memory.buffer,sVar._memory.usedsize))
+						if ((sVar._memory.usedsize==tVar._memory.usedsize)&&PX_memequ(sVar._memory.buffer,tVar._memory.buffer,sVar._memory.usedsize))
 						{
 							pVar->_int=1;
 							pT->IP+=(4+3*4);
@@ -2221,7 +2221,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 				else
 				{
 					if(sVar.type==PX_SCRIPTVM_VARIABLE_TYPE_STRING)
-						if (px_strequ(sVar._string.buffer,tVar._string.buffer))
+						if (PX_strequ(sVar._string.buffer,tVar._string.buffer))
 						{
 							pVar->_int=0;
 							pT->IP+=(4+3*4);
@@ -2230,7 +2230,7 @@ PX_SCRIPTVM_RUNRETURN PX_ScriptVM_InstanceRunThread(PX_ScriptVM_Instance *Ins,px
 
 
 						if(cVar.type==PX_SCRIPTVM_VARIABLE_TYPE_MEMORY)
-							if ((sVar._memory.usedsize==tVar._memory.usedsize)&&px_memequ(sVar._memory.buffer,tVar._memory.buffer,sVar._memory.usedsize))
+							if ((sVar._memory.usedsize==tVar._memory.usedsize)&&PX_memequ(sVar._memory.buffer,tVar._memory.buffer,sVar._memory.usedsize))
 							{
 								pVar->_int=0;
 								pT->IP+=(4+3*4);
@@ -2697,16 +2697,16 @@ px_bool PX_ScriptVM_InstanceRunFunction(PX_ScriptVM_Instance *Ins,px_int threadI
 		return PX_FALSE;
 	}
 
-	if (px_strlen(func)>=__PX_SCRIPT_ASM_MNEMONIC_NAME_LEN)
+	if (PX_strlen(func)>=__PX_SCRIPT_ASM_MNEMONIC_NAME_LEN)
 	{
 		return PX_FALSE;
 	}
 
 	for (i=0;i<Ins->funcCount;i++)
 	{
-		px_strcpy(uprname,func,sizeof(uprname));
-		px_strupr(uprname);
-		if(px_strequ(Ins->_func[i].name,uprname))
+		PX_strcpy(uprname,func,sizeof(uprname));
+		PX_strupr(uprname);
+		if(PX_strequ(Ins->_func[i].name,uprname))
 		{
 			ip=Ins->_func[i].Addr;
 			break;
@@ -2817,9 +2817,9 @@ px_bool PX_ScriptVM_InstanceBeginThreadFunction(PX_ScriptVM_Instance *Ins,px_int
 
 	for (i=0;i<Ins->funcCount;i++)
 	{
-		px_strcpy(uprname,func,sizeof(uprname));
-		px_strupr(uprname);
-		if(px_strequ(Ins->_func[i].name,uprname))
+		PX_strcpy(uprname,func,sizeof(uprname));
+		PX_strupr(uprname);
+		if(PX_strequ(Ins->_func[i].name,uprname))
 		{
 			ip=Ins->_func[i].Addr;
 			break;
@@ -2983,7 +2983,7 @@ px_bool PX_ScriptVM_RegistryHostFunction(PX_ScriptVM_Instance *Ins,px_char *name
 	px_int i;
 	for (i=0;i<Ins->hostCount;i++)
 	{
-		if (px_strequ(name,Ins->_host[i].name+1))
+		if (PX_strequ(name,Ins->_host[i].name+1))
 		{
 			Ins->_host[i].map=funcModules;
 			return PX_TRUE;
@@ -3161,16 +3161,16 @@ px_int PX_ScriptVM_GetFunctionIndex(PX_ScriptVM_Instance *Ins,px_char *func)
 	{
 		return -1;
 	}
-	if (px_strlen(func)>=sizeof(cmpName))
+	if (PX_strlen(func)>=sizeof(cmpName))
 	{
 		return -1;
 	}
-	px_strcpy(cmpName,func,sizeof(cmpName));
-	px_strupr(cmpName);
+	PX_strcpy(cmpName,func,sizeof(cmpName));
+	PX_strupr(cmpName);
 
 	for (i=0;i<Ins->funcCount;i++)
 	{
-		if(px_strequ(Ins->_func[i].name,cmpName))
+		if(PX_strequ(Ins->_func[i].name,cmpName))
 		{
 			return i;
 		}
@@ -4201,7 +4201,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 		{
 			break;
 		}
-		if (px_strequ(lexer.CurLexeme.buffer,"B"))
+		if (PX_strequ(lexer.CurLexeme.buffer,"B"))
 		{
 			type=PX_LexerGetNextLexeme(&lexer);
 			if (type!=PX_LEXER_LEXEME_TYPE_SPACER)
@@ -4209,7 +4209,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 				break;
 			}
 			type=PX_LexerGetNextLexeme(&lexer);
-			if(px_strIsInt(lexer.CurLexeme.buffer))
+			if(PX_strIsInt(lexer.CurLexeme.buffer))
 				Ins->bp_IP=PX_atoi(lexer.CurLexeme.buffer);
 			else
 				break;
@@ -4221,7 +4221,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 				break;
 			}
 		}
-		else if(px_strequ(lexer.CurLexeme.buffer,"N"))
+		else if(PX_strequ(lexer.CurLexeme.buffer,"N"))
 		{
 			type=PX_LexerGetNextLexeme(&lexer);
 			if (type!=PX_LEXER_LEXEME_TYPE_END)
@@ -4231,7 +4231,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 			Ins->bp_next=PX_TRUE;
 			bContinue=PX_TRUE;
 		}
-		else if(px_strequ(lexer.CurLexeme.buffer,"C"))
+		else if(PX_strequ(lexer.CurLexeme.buffer,"C"))
 		{
 			type=PX_LexerGetNextLexeme(&lexer);
 			if (type!=PX_LEXER_LEXEME_TYPE_END)
@@ -4241,7 +4241,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 			Ins->bp_next=PX_FALSE;
 			bContinue=PX_TRUE;
 		}
-		else if(px_strequ(lexer.CurLexeme.buffer,"U"))
+		else if(PX_strequ(lexer.CurLexeme.buffer,"U"))
 		{
 			type=PX_LexerGetNextLexeme(&lexer);
 			if (type!=PX_LEXER_LEXEME_TYPE_SPACER)
@@ -4250,7 +4250,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 			}
 
 			type=PX_LexerGetNextLexeme(&lexer);
-			if(px_strIsInt(lexer.CurLexeme.buffer))
+			if(PX_strIsInt(lexer.CurLexeme.buffer))
 				u=PX_atoi(lexer.CurLexeme.buffer);
 			else
 				break;
@@ -4271,7 +4271,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 			}
 			break;
 		}
-		else if(px_strequ(lexer.CurLexeme.buffer,"R"))
+		else if(PX_strequ(lexer.CurLexeme.buffer,"R"))
 		{
 			type=PX_LexerGetNextLexeme(&lexer);
 			if (type!=PX_LEXER_LEXEME_TYPE_SPACER)
@@ -4280,7 +4280,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 			}
 
 			type=PX_LexerGetNextLexeme(&lexer);
-			if(px_strIsInt(lexer.CurLexeme.buffer))
+			if(PX_strIsInt(lexer.CurLexeme.buffer))
 				u=PX_atoi(lexer.CurLexeme.buffer);
 			else
 				break;
@@ -4295,7 +4295,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 
 			break;
 		}
-		else if(px_strequ(lexer.CurLexeme.buffer,"G"))
+		else if(PX_strequ(lexer.CurLexeme.buffer,"G"))
 		{
 			type=PX_LexerGetNextLexeme(&lexer);
 			if (type!=PX_LEXER_LEXEME_TYPE_SPACER)
@@ -4304,7 +4304,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 			}
 
 			type=PX_LexerGetNextLexeme(&lexer);
-			if(px_strIsInt(lexer.CurLexeme.buffer))
+			if(PX_strIsInt(lexer.CurLexeme.buffer))
 				u=PX_atoi(lexer.CurLexeme.buffer);
 			else
 				break;
@@ -4319,7 +4319,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 
 			break;
 		}
-		else if(px_strequ(lexer.CurLexeme.buffer,"L"))
+		else if(PX_strequ(lexer.CurLexeme.buffer,"L"))
 		{
 			type=PX_LexerGetNextLexeme(&lexer);
 			if (type!=PX_LEXER_LEXEME_TYPE_SPACER)
@@ -4328,7 +4328,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 			}
 
 			type=PX_LexerGetNextLexeme(&lexer);
-			if(px_strIsInt(lexer.CurLexeme.buffer))
+			if(PX_strIsInt(lexer.CurLexeme.buffer))
 				u=PX_atoi(lexer.CurLexeme.buffer);
 			else
 				break;
@@ -4343,7 +4343,7 @@ static px_bool PX_ScriptVM_DebuggerSolveCmd(PX_ScriptVM_Instance *Ins,px_char *c
 			}
 			break;
 		}
-		else if(px_strequ(lexer.CurLexeme.buffer,"D"))
+		else if(PX_strequ(lexer.CurLexeme.buffer,"D"))
 		{
 			g_scriptVM_printFunc("IP:%d  SP:%d  BP:%d\n",Ins->pThread[Ins->T].IP,Ins->pThread[Ins->T].SP,Ins->pThread[Ins->T].BP);
 		}
@@ -4381,7 +4381,7 @@ px_void PX_ScriptVM_DebuggerInterrupt(PX_ScriptVM_Instance *Ins)
 	{
 		PX_SCRIPT_VM_LOG("debug:>");
 		g_scriptVM_cmdFunc(cmd,PX_SCRIPTVM_DEBUGGER_CMD_LEN);
-		px_strupr(cmd);
+		PX_strupr(cmd);
 	} while (!PX_ScriptVM_DebuggerSolveCmd(Ins,cmd));
 	
 	

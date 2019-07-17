@@ -35,7 +35,7 @@ px_bool PX_VectorSet(px_vector *vec,px_uint index,px_void *data)
 		{
 			return PX_FALSE;
 		}
-		px_memcpy(vec->data,old,vec->allocsize*vec->nodesize);
+		PX_memcpy(vec->data,old,vec->allocsize*vec->nodesize);
 		vec->allocsize=allocsize;
 		MP_Free(vec->mp,old);
 	}
@@ -43,7 +43,7 @@ px_bool PX_VectorSet(px_vector *vec,px_uint index,px_void *data)
 	{
 		vec->size=index+1;
 	}
-	px_memcpy((px_byte *)vec->data+index*vec->nodesize,data,vec->nodesize);
+	PX_memcpy((px_byte *)vec->data+index*vec->nodesize,data,vec->nodesize);
 	return PX_TRUE;
 }
 
@@ -53,7 +53,7 @@ px_bool PX_VectorPushback(px_vector *vec,px_void *data)
 	px_void *old;
 	if (vec->size<vec->allocsize)
 	{
-		px_memcpy((px_byte *)vec->data+vec->size*vec->nodesize,data,vec->nodesize);
+		PX_memcpy((px_byte *)vec->data+vec->size*vec->nodesize,data,vec->nodesize);
 		vec->size++;
 	}
 	else
@@ -74,9 +74,9 @@ px_bool PX_VectorPushback(px_vector *vec,px_void *data)
 		{
 			return PX_FALSE;
 		}
-		px_memcpy(vec->data,old,vec->allocsize*vec->nodesize);
+		PX_memcpy(vec->data,old,vec->allocsize*vec->nodesize);
 		vec->allocsize=allocSize;
-		px_memcpy((px_byte *)vec->data+vec->size*vec->nodesize,data,vec->nodesize);
+		PX_memcpy((px_byte *)vec->data+vec->size*vec->nodesize,data,vec->nodesize);
 		vec->size++;
 		if(old)
 		MP_Free(vec->mp,old);
@@ -91,7 +91,7 @@ px_bool PX_VectorErase(px_vector *vec,px_int index)
 		PX_ERROR("Vector Erase Error!");
 		return PX_FALSE;
 	}
-	px_memcpy((px_byte *)vec->data+index*vec->nodesize,(px_byte *)vec->data+(index+1)*vec->nodesize,(vec->size-index-1)*vec->nodesize);
+	PX_memcpy((px_byte *)vec->data+index*vec->nodesize,(px_byte *)vec->data+(index+1)*vec->nodesize,(vec->size-index-1)*vec->nodesize);
 	vec->size--;
 	return PX_TRUE;
 }

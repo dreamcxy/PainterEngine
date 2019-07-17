@@ -51,7 +51,7 @@ px_char * PX_LexerIsCommentStart(px_lexer *lexer,px_char ch[])
 	px_int i=0;
 	for (i=0;i<lexer->CommentCount;i++)
 	{
-		if(px_memequ(ch,lexer->Comment[i].CommentBegin,px_strlen(lexer->Comment[i].CommentBegin)))
+		if(PX_memequ(ch,lexer->Comment[i].CommentBegin,PX_strlen(lexer->Comment[i].CommentBegin)))
 			return lexer->Comment[i].CommentBegin;
 	}
 	return PX_NULL;
@@ -62,7 +62,7 @@ px_char * PX_LexerIsCommentEnd(px_lexer *lexer,px_char startch[],px_char ch[])
 	px_int i=0;
 	for (i=0;i<lexer->CommentCount;i++)
 	{
-		if(px_memequ(startch,lexer->Comment[i].CommentBegin,px_strlen(lexer->Comment[i].CommentBegin))&&px_memequ(ch,lexer->Comment[i].CommentEnd,px_strlen(lexer->Comment[i].CommentEnd)))
+		if(PX_memequ(startch,lexer->Comment[i].CommentBegin,PX_strlen(lexer->Comment[i].CommentBegin))&&PX_memequ(ch,lexer->Comment[i].CommentEnd,PX_strlen(lexer->Comment[i].CommentEnd)))
 			{
 				lexer->CurrentCommentType=i;
 				return lexer->Comment[i].CommentEnd;
@@ -170,8 +170,8 @@ px_uint PX_LexerRegisterContainer(px_lexer *lexer,px_char Begin[],px_char End[])
 				return i;
 			}
 		}
-		px_strcpy(lexer->Container[lexer->ContainerCount].ContainerBegin,Begin,sizeof(lexer->Container[lexer->ContainerCount].ContainerBegin));
-		px_strcpy(lexer->Container[lexer->ContainerCount].ContainerEnd,End,sizeof(lexer->Container[lexer->ContainerCount].ContainerEnd));
+		PX_strcpy(lexer->Container[lexer->ContainerCount].ContainerBegin,Begin,sizeof(lexer->Container[lexer->ContainerCount].ContainerBegin));
+		PX_strcpy(lexer->Container[lexer->ContainerCount].ContainerEnd,End,sizeof(lexer->Container[lexer->ContainerCount].ContainerEnd));
 		lexer->ContainerCount++;
 		return lexer->ContainerCount-1;
 	}
@@ -195,7 +195,7 @@ px_char * PX_LexerIsContainerStart(px_lexer *lexer,px_char chr[])
 	px_int i=0;
 	for (i=0;i<lexer->ContainerCount;i++)
 	{
-		if(px_memequ(chr,lexer->Container[i].ContainerBegin,px_strlen(lexer->Container[i].ContainerBegin)))
+		if(PX_memequ(chr,lexer->Container[i].ContainerBegin,PX_strlen(lexer->Container[i].ContainerBegin)))
 			return lexer->Container[i].ContainerBegin;
 	}
 	return PX_NULL;
@@ -206,7 +206,7 @@ px_char * PX_LexerIsContainerEnd(px_lexer *lexer,px_char startch[],px_char ch[])
 	px_int i=0;
 	for (i=0;i<lexer->ContainerCount;i++)
 	{
-		if(px_memequ(startch,lexer->Container[i].ContainerBegin,px_strlen(startch))&&px_memequ(ch,lexer->Container[i].ContainerEnd,px_strlen(lexer->Container[i].ContainerEnd)))
+		if(PX_memequ(startch,lexer->Container[i].ContainerBegin,PX_strlen(startch))&&PX_memequ(ch,lexer->Container[i].ContainerEnd,PX_strlen(lexer->Container[i].ContainerEnd)))
 			{
 				lexer->CurrentContainerType=i;
 				return lexer->Container[i].ContainerEnd;
@@ -259,10 +259,10 @@ px_void PX_LexerInit(px_lexer *lexer,px_memorypool *mp)
 	lexer->lexemeTokenCase=PX_LEXER_LEXEME_CASE_NORMAL;
 	lexer->NumericMath=PX_FALSE;
 	PX_StringInit(mp,&lexer->CurLexeme);
-	px_memset(lexer->Delimiter,0,sizeof(lexer->Delimiter));
-	px_memset(lexer->Spacer,0,sizeof(lexer->Spacer));
-	px_memset(lexer->Container,0,sizeof(lexer->Container));
-	px_memset(lexer->Comment,0,sizeof(lexer->Comment));
+	PX_memset(lexer->Delimiter,0,sizeof(lexer->Delimiter));
+	PX_memset(lexer->Spacer,0,sizeof(lexer->Spacer));
+	PX_memset(lexer->Container,0,sizeof(lexer->Container));
+	PX_memset(lexer->Comment,0,sizeof(lexer->Comment));
 }
 
 
@@ -319,11 +319,11 @@ px_bool PX_LexerSortText(px_lexer *lexer,px_char *SourceText)
 		lexer->SourceOffset=0;
 		lexer->SortStatus=PX_LEXERSORT_STATUS_NORMAL;
 	}
-	if ((lexer->Sources=(px_char *)MP_Malloc(lexer->mp,px_strlen(SourceText)+1))==PX_NULL)
+	if ((lexer->Sources=(px_char *)MP_Malloc(lexer->mp,PX_strlen(SourceText)+1))==PX_NULL)
 	{
 		return PX_FALSE;
 	}
-	px_memset(lexer->Sources,0,px_strlen(SourceText)+1);
+	PX_memset(lexer->Sources,0,PX_strlen(SourceText)+1);
 	lexer->SortStatus=PX_LEXER_SORT_STATUS_NEWLINE;
 	
 	while(*SourceText)
@@ -331,7 +331,7 @@ px_bool PX_LexerSortText(px_lexer *lexer,px_char *SourceText)
 		//Comment trim
 		if (chrst=PX_LexerIsCommentStart(lexer,SourceText))
 		{
-			SourceText+=px_strlen(chrst);
+			SourceText+=PX_strlen(chrst);
 			while (!(chred=PX_LexerIsCommentEnd(lexer,chrst,SourceText)))
 			{
 				if (!*SourceText)
@@ -342,18 +342,18 @@ px_bool PX_LexerSortText(px_lexer *lexer,px_char *SourceText)
 			}
 			//special end '\n'
 			if(*SourceText=='\n')
-			SourceText+=px_strlen(chred)-1;
+			SourceText+=PX_strlen(chred)-1;
 			else
-			SourceText+=px_strlen(chred);
+			SourceText+=PX_strlen(chred);
 			continue;
 		}
 
 		//container skip
 		if (chrst=PX_LexerIsContainerStart(lexer,SourceText))
 		{
-			px_memcpy(lexer->Sources+Offset,chrst,px_strlen(chrst));
-			Offset+=px_strlen(chrst);;
-			SourceText+=px_strlen(chrst);
+			PX_memcpy(lexer->Sources+Offset,chrst,PX_strlen(chrst));
+			Offset+=PX_strlen(chrst);;
+			SourceText+=PX_strlen(chrst);
 
 			while (!(chred=PX_LexerIsContainerEnd(lexer,chrst,SourceText)))
 			{
@@ -362,7 +362,7 @@ px_bool PX_LexerSortText(px_lexer *lexer,px_char *SourceText)
 					return PX_FALSE;
 				}
 
-				if(PX_LexerIsContainerTransfer(lexer,chrst,*SourceText)&&px_memequ(SourceText+1,chrst,px_strlen(chrst)))
+				if(PX_LexerIsContainerTransfer(lexer,chrst,*SourceText)&&PX_memequ(SourceText+1,chrst,PX_strlen(chrst)))
 				{
 					lexer->Sources[Offset++]=*(SourceText++);
 					lexer->Sources[Offset++]=*(SourceText++);
@@ -370,9 +370,9 @@ px_bool PX_LexerSortText(px_lexer *lexer,px_char *SourceText)
 				else
 				lexer->Sources[Offset++]=*(SourceText++);
 			}
-			px_memcpy(lexer->Sources+Offset,chred,px_strlen(chred));
-			Offset+=px_strlen(chred);;
-			SourceText+=px_strlen(chred);
+			PX_memcpy(lexer->Sources+Offset,chred,PX_strlen(chred));
+			Offset+=PX_strlen(chred);;
+			SourceText+=PX_strlen(chred);
 			continue;
 		}
 
@@ -431,14 +431,14 @@ PX_LEXER_LEXEME_TYPE PX_LexerGetNextLexeme(px_lexer *lexer)
 		if (chrst=PX_LexerIsContainerStart(lexer,(&lexer->Sources[lexer->SourceOffset])))
 		{
 			PX_StringCat(&lexer->CurLexeme,chrst);
-			lexer->SourceOffset+=px_strlen(chrst);
+			lexer->SourceOffset+=PX_strlen(chrst);
 			while (!(chred=PX_LexerIsContainerEnd(lexer,chrst,&lexer->Sources[lexer->SourceOffset])))
 			{
 				if (PX_LexerIsSourcsEnd(lexer))
 				{
 					return PX_LEXER_LEXEME_TYPE_ERR;
 				}
-				if(PX_LexerIsContainerTransfer(lexer,chrst,lexer->Sources[lexer->SourceOffset])&&px_memequ(&lexer->Sources[lexer->SourceOffset+1],chrst,px_strlen(chrst)))
+				if(PX_LexerIsContainerTransfer(lexer,chrst,lexer->Sources[lexer->SourceOffset])&&PX_memequ(&lexer->Sources[lexer->SourceOffset+1],chrst,PX_strlen(chrst)))
 				{
 					PX_StringCatChar(&lexer->CurLexeme,lexer->Sources[lexer->SourceOffset++]);	
 					PX_StringCatChar(&lexer->CurLexeme,lexer->Sources[lexer->SourceOffset++]);		
@@ -447,7 +447,7 @@ PX_LEXER_LEXEME_TYPE PX_LexerGetNextLexeme(px_lexer *lexer)
 				PX_StringCatChar(&lexer->CurLexeme,lexer->Sources[lexer->SourceOffset++]);
 			}
 			PX_StringCat(&lexer->CurLexeme,chred);
-			lexer->SourceOffset+=px_strlen(chred);
+			lexer->SourceOffset+=PX_strlen(chred);
 
 			//printf("<Container> %s\n",lexer->CurLexeme);
 			lexer->CurrentLexemeFlag=PX_LEXER_LEXEME_TYPE_CONATINER;
@@ -541,12 +541,12 @@ PX_LEXER_LEXEME_TYPE PX_LexerGetNextLexeme(px_lexer *lexer)
 		//printf("<Token> %s\n",m_CurLexeme);
 		if (lexer->lexemeTokenCase==PX_LEXER_LEXEME_CASE_UPPER)
 		{
-			px_strupr(lexer->CurLexeme.buffer);
+			PX_strupr(lexer->CurLexeme.buffer);
 		}
 
 		if (lexer->lexemeTokenCase==PX_LEXER_LEXEME_CASE_LOWER)
 		{
-			px_strlwr(lexer->CurLexeme.buffer);
+			PX_strlwr(lexer->CurLexeme.buffer);
 		}
 	lexer->CurrentLexemeFlag=PX_LEXER_LEXEME_TYPE_TOKEN;
 	return PX_LEXER_LEXEME_TYPE_TOKEN;
@@ -575,8 +575,8 @@ px_void PX_LexerGetIncludedString(px_lexer *lexer,px_string *str)
 	
 	if (lexer->CurrentLexemeFlag==PX_LEXER_LEXEME_TYPE_CONATINER)
 	{
-		left=px_strlen(lexer->Container[lexer->CurrentContainerType].ContainerBegin);
-		right=px_strlen(lexer->Container[lexer->CurrentContainerType].ContainerEnd);
+		left=PX_strlen(lexer->Container[lexer->CurrentContainerType].ContainerBegin);
+		right=PX_strlen(lexer->Container[lexer->CurrentContainerType].ContainerEnd);
 		PX_StringTrimRight(str,right);
 		PX_StringTrimLeft(str,left);
 	}
@@ -600,8 +600,8 @@ px_void PX_LexerRegisterComment(px_lexer *lexer, px_char Begin[],px_char End[] )
 				return;
 			}
 		}
-		px_strcpy(lexer->Comment[lexer->CommentCount].CommentBegin,Begin,sizeof(lexer->Comment[lexer->CommentCount].CommentBegin));
-		px_strcpy(lexer->Comment[lexer->CommentCount].CommentEnd,End,sizeof(lexer->Comment[lexer->CommentCount].CommentEnd));
+		PX_strcpy(lexer->Comment[lexer->CommentCount].CommentBegin,Begin,sizeof(lexer->Comment[lexer->CommentCount].CommentBegin));
+		PX_strcpy(lexer->Comment[lexer->CommentCount].CommentEnd,End,sizeof(lexer->Comment[lexer->CommentCount].CommentEnd));
 		lexer->CommentCount++;
 	}
 }
@@ -691,7 +691,7 @@ px_bool PX_LexerIsContainerTransfer(px_lexer *lexer,px_char startch[],px_char ch
 	px_int i=0;
 	for (i=0;i<lexer->ContainerCount;i++)
 	{
-		if(px_memequ(startch,lexer->Container[i].ContainerBegin,px_strlen(startch))&&lexer->Container[i].transfer&&lexer->Container[i].transfer==ch)
+		if(PX_memequ(startch,lexer->Container[i].ContainerBegin,PX_strlen(startch))&&lexer->Container[i].transfer&&lexer->Container[i].transfer==ch)
 		{
 			return PX_TRUE;
 		}

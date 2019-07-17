@@ -35,7 +35,7 @@ px_int PX_ArleCompressData(px_byte *_in,px_uchar size,PX_ARLE_TYPE type,px_byte 
 				ecode=0;
 				ecode|=size;
 				_out[0]=ecode;
-				px_memcpy(_out+1,_in,size);
+				PX_memcpy(_out+1,_in,size);
 			}
 			return size+1;
 
@@ -142,7 +142,7 @@ px_void PX_ArleDecompress(px_byte *_in,px_uint input_size,px_byte *_out,px_uint 
 		{
 			if (_out)
 			{
-				px_memset(_out+w_cursor,_in[r_cursor+1],size);
+				PX_memset(_out+w_cursor,_in[r_cursor+1],size);
 			}
 			w_cursor+=size;
 			*_outsize+=size;
@@ -152,7 +152,7 @@ px_void PX_ArleDecompress(px_byte *_in,px_uint input_size,px_byte *_out,px_uint 
 		{
 			if (_out)
 			{
-				px_memcpy(_out+w_cursor,&_in[r_cursor+1],size);
+				PX_memcpy(_out+w_cursor,&_in[r_cursor+1],size);
 			}
 			w_cursor+=size;
 			*_outsize+=size;

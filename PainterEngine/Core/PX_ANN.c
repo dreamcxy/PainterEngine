@@ -322,6 +322,6 @@ px_void PX_ANNGetOutput(PX_ANN *pAnn,px_double *result)
 	PX_ANN_Layer *p=pAnn->Layer;
 	if(!p) return;
 	while (p->pNext) p=p->pNext;
-	px_memcpy(result,p->out,p->Neurals*sizeof(px_double));
+	PX_memcpy(result,p->out,p->Neurals*sizeof(px_double));
 }
 

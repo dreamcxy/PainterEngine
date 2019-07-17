@@ -1103,7 +1103,7 @@ px_void PX_SurfaceSetRect(px_surface *psurface, px_int left, px_int top, px_int 
 
 	for (i=top;i<=bottom;i++)
 	{
-		px_memdwordset(psurface->surfaceBuffer+i*psurface->width+left,color._argb.ucolor,right-left+1);
+		PX_memdwordset(psurface->surfaceBuffer+i*psurface->width+left,color._argb.ucolor,right-left+1);
 	}
 }
 
@@ -1545,7 +1545,7 @@ px_bool PX_ShapeCreate(px_memorypool *mp,px_shape *shape,px_int width,px_int hei
 		shape->width=width;
 		shape->alpha=(px_uchar *)p;
 		shape->MP=mp;
-		px_memset(p,0,height*width);
+		PX_memset(p,0,height*width);
 		return PX_TRUE;
 	}
 	return PX_FALSE;
@@ -1563,7 +1563,7 @@ px_bool PX_ShapeCreateFromTexture(px_memorypool *mp,px_shape *shape,px_texture *
 		shape->width=texture->width;
 		shape->alpha=(px_uchar *)p;
 		shape->MP=mp;
-		px_memdwordset(p,0,texture->height*texture->width);
+		PX_memdwordset(p,0,texture->height*texture->width);
 
 		//Map texture to shape
 		for (y=0;y<texture->height;y++)
@@ -2231,7 +2231,7 @@ px_void PX_TextureRenderEx_vector(px_surface *psurface,px_texture *resTexture,px
 px_bool PX_TextureCopy(px_memorypool *mp,px_texture *restexture,px_texture *dest)
 {
 	if(!PX_TextureCreate(mp,dest,restexture->width,restexture->height)) return PX_FALSE;
-	px_memcpy(dest->surfaceBuffer,restexture->surfaceBuffer,restexture->width*restexture->height*sizeof(px_color));
+	PX_memcpy(dest->surfaceBuffer,restexture->surfaceBuffer,restexture->width*restexture->height*sizeof(px_color));
 	return PX_TRUE;
 }
 

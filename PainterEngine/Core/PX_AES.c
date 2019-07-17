@@ -77,7 +77,7 @@ px_void	PX_AES_Initialize(PX_AES *aesStruct,PX_AES_KeySize keySize,AES_BYTE keyB
 {
 	PX_AES_SetNbNkNr(aesStruct,keySize);
 	/*Bytes copied*/
-	px_memcpy(aesStruct->key,keyByte,aesStruct->Nk*4);
+	PX_memcpy(aesStruct->key,keyByte,aesStruct->Nk*4);
 
 	PX_AES_KeyExpansion(aesStruct); // expand the seed key into a key schedule and store in w
 }
@@ -136,7 +136,7 @@ px_void PX_AES_KeyExpansion(PX_AES *aesStruct)
 
 		if (row % aesStruct->Nk == 0)  
 		{
-			px_memcpy(temp ,PX_AES_SubWord(aesStruct,PX_AES_RotWord(aesStruct,temp)),4);
+			PX_memcpy(temp ,PX_AES_SubWord(aesStruct,PX_AES_RotWord(aesStruct,temp)),4);
 
 			temp[0] = (AES_BYTE)( (px_int)temp[0] ^ (px_int)Rcon[row/aesStruct->Nk][0] );
 			temp[1] = (AES_BYTE)( (px_int)temp[1] ^ (px_int)Rcon[row/aesStruct->Nk][1] );
@@ -145,7 +145,7 @@ px_void PX_AES_KeyExpansion(PX_AES *aesStruct)
 		}
 		else if ( aesStruct->Nk > 6 && (row % aesStruct->Nk == 4) )  
 		{
-			px_memcpy(temp,PX_AES_SubWord(aesStruct,temp),4);
+			PX_memcpy(temp,PX_AES_SubWord(aesStruct,temp),4);
 		}
 
 		// w[row] = w[row-Nk] xor temp

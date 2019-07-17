@@ -18,7 +18,7 @@ px_uint PX_WAVEGetPCMSize(px_byte *buffer,px_int size)
 	while (offset+(px_int)sizeof(PX_WAVE_DATA_BLOCK)<size)
 	{
 		pBlock=(PX_WAVE_DATA_BLOCK*)(buffer+offset);
-		if(!px_memequ(pBlock->szDataID,"data",4))
+		if(!PX_memequ(pBlock->szDataID,"data",4))
 		{
 			offset+=pBlock->dwDataSize+sizeof(PX_WAVE_DATA_BLOCK);
 			continue;
@@ -38,16 +38,16 @@ px_bool PX_WAVEVerify(px_byte *buffer,px_int size)
 	{
 		return PX_FALSE;
 	}
-	if (!px_memequ(pHeader->szRiffId,"RIFF",4))
+	if (!PX_memequ(pHeader->szRiffId,"RIFF",4))
 	{
 		return PX_FALSE;
 	}
-	if (!px_memequ(pHeader->szRiffFormat,"WAVE",4))
+	if (!PX_memequ(pHeader->szRiffFormat,"WAVE",4))
 	{
 		return PX_FALSE;
 	}
 	pfmt_block=(PX_WAVE_FMT_BLOCK  *)(buffer+sizeof(PX_WAVE_RIFF_HEADER));
-	if (!px_memequ(pfmt_block->szFmtID,"fmt",3))
+	if (!PX_memequ(pfmt_block->szFmtID,"fmt",3))
 	{
 		return PX_FALSE;
 	}

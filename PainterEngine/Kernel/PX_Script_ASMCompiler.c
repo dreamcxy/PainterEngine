@@ -9,11 +9,11 @@ static px_void PX_ScriptAsmError(px_lexer *lexer,px_char *err)
 	PX_Script_ASMError[0]='\0';
 	if (lexer->SourceOffset>96)
 	{
-		px_strcpy(PX_Script_ASMError,lexer->Sources+lexer->SourceOffset-96,96);	
+		PX_strcpy(PX_Script_ASMError,lexer->Sources+lexer->SourceOffset-96,96);	
 	}
 	else
 	{
-		px_strcpy(PX_Script_ASMError,lexer->Sources,96);	
+		PX_strcpy(PX_Script_ASMError,lexer->Sources,96);	
 	}
 
 	PX_LOG(err);
@@ -53,7 +53,7 @@ px_bool PX_ScriptAsm_isInt(px_char token[])
 		}
 		return PX_TRUE;
 	}
-	return px_strIsInt(token);
+	return PX_strIsInt(token);
 }
 
 static px_void PX_ScriptAsmRegistInstr(PX_SCRIPT_ASM_COMPILER *compiler,px_char mnemonic[__PX_SCRIPT_ASM_INSTR_MNEMONIC_NAME_LEN],px_char opcode,px_int accType[],px_char paramcout)
@@ -61,7 +61,7 @@ static px_void PX_ScriptAsmRegistInstr(PX_SCRIPT_ASM_COMPILER *compiler,px_char 
 	px_int i=0;
 	PX_SCRIPT_ASM_GRAMMAR_INSTR instr;
 	
-	px_strcpy(instr.mnemonic,mnemonic,sizeof(instr.mnemonic));
+	PX_strcpy(instr.mnemonic,mnemonic,sizeof(instr.mnemonic));
 	instr.opcode=opcode;
 	instr.paramCount=paramcout;
 	
@@ -75,7 +75,7 @@ static px_void PX_ScriptAsmRegistInstr(PX_SCRIPT_ASM_COMPILER *compiler,px_char 
 static px_void PX_ScriptAsmStringConvert(px_string *str)
 {
 	px_int i,j;
-	for (i=0;i<px_strlen(str->buffer);i++)
+	for (i=0;i<PX_strlen(str->buffer);i++)
 	{
 		if (str->buffer[i]=='\\')
 		{
@@ -125,7 +125,7 @@ PX_LEXER_LEXEME_TYPE PX_ScriptAsmNexLexeme(px_lexer *lexer)
 {
 	PX_LEXER_LEXEME_TYPE type;
 	while (PX_LEXER_LEXEME_TYPE_SPACER==(type=PX_LexerGetNextLexeme(lexer)));
-	if (px_strlen(lexer->CurLexeme.buffer)>__PX_SCRIPT_ASM_MNEMONIC_NAME_LEN-1)
+	if (PX_strlen(lexer->CurLexeme.buffer)>__PX_SCRIPT_ASM_MNEMONIC_NAME_LEN-1)
 	{
 		if(type!=PX_LEXER_LEXEME_TYPE_CONATINER)
 		{
@@ -139,13 +139,13 @@ PX_LEXER_LEXEME_TYPE PX_ScriptAsmNexLexeme(px_lexer *lexer)
 
 px_bool PX_ScriptAsmIsValidToken(px_char *token)
 {
-	if (token[0]=='\0'||px_charIsNumeric(token[0]))
+	if (token[0]=='\0'||PX_charIsNumeric(token[0]))
 	{
 		return PX_FALSE;
 	}
 	while (*token)
 	{
-		if ((*token>='A'&&*token<='Z')||*token=='_'||px_charIsNumeric(*token))
+		if ((*token>='A'&&*token<='Z')||*token=='_'||PX_charIsNumeric(*token))
 		{
 			token++;
 			continue;
@@ -158,16 +158,16 @@ px_bool PX_ScriptAsmIsValidToken(px_char *token)
 px_int PX_ScriptAsmGetGlobalIndex(px_char * mne)
 {
 	px_char data[__PX_SCRIPT_ASM_MNEMONIC_NAME_LEN];
-	px_strcpy(data,mne,sizeof(data));
-	data[px_strlen(data)-1]='\0';
+	PX_strcpy(data,mne,sizeof(data));
+	data[PX_strlen(data)-1]='\0';
 	return PX_ScriptAsm_atoi(data+sizeof("GLOBAL["));
 }
 
 px_int PX_ScriptAsmGetStackIndex(px_char * mne)
 {
 	px_char data[__PX_SCRIPT_ASM_MNEMONIC_NAME_LEN];
-	px_strcpy(data,mne,sizeof(data));
-	data[px_strlen(data)-1]='\0';
+	PX_strcpy(data,mne,sizeof(data));
+	data[PX_strlen(data)-1]='\0';
 	return PX_ScriptAsm_atoi(data+sizeof("STACK["));
 }
 
@@ -180,7 +180,7 @@ px_int PX_ScriptAsmTokenType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *token)
 		bfound=PX_FALSE;
 		for (i=0;i<compiler->assumeTable.size;i++)
 		{
-			if (px_strequ(((PX_SCRIPT_ASM_ASSUME_NODE *)(PX_ListAt(&compiler->assumeTable,i)->pdata))->name.buffer,token))
+			if (PX_strequ(((PX_SCRIPT_ASM_ASSUME_NODE *)(PX_ListAt(&compiler->assumeTable,i)->pdata))->name.buffer,token))
 			{
 				token=((PX_SCRIPT_ASM_ASSUME_NODE *)(PX_ListAt(&compiler->assumeTable,i)->pdata))->assume.buffer;
 				bfound=PX_TRUE;
@@ -197,32 +197,32 @@ px_int PX_ScriptAsmTokenType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *token)
 		PX_ScriptAsmError(&compiler->lexer,"ASSUME too much iteration");
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_UNKNOW;
 	}
-	if (px_strequ(token,"SP"))
+	if (PX_strequ(token,"SP"))
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_SP;
 	}
 
-	if (px_strequ(token,"IP"))
+	if (PX_strequ(token,"IP"))
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_IP;
 	}
 
-	if (px_strequ(token,"BP"))
+	if (PX_strequ(token,"BP"))
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_BP;
 	}
 
-	if (px_memequ(token,"GLOBAL[",sizeof("GLOBAL[")-1)&&token[px_strlen(token)-1]==']')
+	if (PX_memequ(token,"GLOBAL[",sizeof("GLOBAL[")-1)&&token[PX_strlen(token)-1]==']')
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_GLOBAL;
 	}
 
-	if (px_memequ(token,"LOCAL[",sizeof("LOCAL[")-1)&&token[px_strlen(token)-1]==']')
+	if (PX_memequ(token,"LOCAL[",sizeof("LOCAL[")-1)&&token[PX_strlen(token)-1]==']')
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_LOCAL;
 	}
 
-	if (token[0]=='R'&&px_strIsInt(token+1))
+	if (token[0]=='R'&&PX_strIsInt(token+1))
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_REG;
 	}
@@ -232,17 +232,17 @@ px_int PX_ScriptAsmTokenType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *token)
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_HOST;
 	}
 
-	if (token[0]=='\"'&&token[px_strlen(token)-1]=='\"')
+	if (token[0]=='\"'&&token[PX_strlen(token)-1]=='\"')
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_STRING;
 	}
 
-	if (token[0]=='\''&&token[px_strlen(token)-1]=='\'')
+	if (token[0]=='\''&&token[PX_strlen(token)-1]=='\'')
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_INT;
 	}
 
-	if (token[0]=='@'&&token[px_strlen(token)-1]=='@')
+	if (token[0]=='@'&&token[PX_strlen(token)-1]=='@')
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_MEMORY;
 	}
@@ -254,14 +254,14 @@ px_int PX_ScriptAsmTokenType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *token)
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_INT;
 	}
 
-	if (px_strIsFloat(token))
+	if (PX_strIsFloat(token))
 	{
 		return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_FLOAT;
 	}
 
 	for (i=0;i<compiler->LabelTable.size;i++)
 	{
-		if (px_strequ(((PX_SCRIPT_ASM_LABEL_NODE *)(PX_ListAt(&compiler->LabelTable,i)->pdata))->mnemonic,token))
+		if (PX_strequ(((PX_SCRIPT_ASM_LABEL_NODE *)(PX_ListAt(&compiler->LabelTable,i)->pdata))->mnemonic,token))
 		{
 			return PX_SCRIPT_ASM_OPERAND_ACC_TYPE_LABEL;
 		}
@@ -320,7 +320,7 @@ static px_bool PX_ScriptASMMapAssume(PX_SCRIPT_ASM_COMPILER *compiler,px_string 
 		bfound=PX_FALSE;
 		for (i=0;i<compiler->assumeTable.size;i++)
 		{
-			if (px_strequ(((PX_SCRIPT_ASM_ASSUME_NODE *)(PX_ListAt(&compiler->assumeTable,i)->pdata))->name.buffer,mnenonic->buffer))
+			if (PX_strequ(((PX_SCRIPT_ASM_ASSUME_NODE *)(PX_ListAt(&compiler->assumeTable,i)->pdata))->name.buffer,mnenonic->buffer))
 			{
 			
 				PX_StringCopy(mnenonic,&(((PX_SCRIPT_ASM_ASSUME_NODE *)PX_ListAt(&compiler->assumeTable,i)->pdata)->assume));
@@ -348,14 +348,14 @@ static px_bool PX_ScriptAsmLocalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *T
 	PX_StringInit(compiler->mp,&TempTokenString);
 	PX_StringCat(&TempTokenString,Token);
 
-	PX_StringTrimLeft(&TempTokenString,px_strlen("LOCAL["));
+	PX_StringTrimLeft(&TempTokenString,PX_strlen("LOCAL["));
 	PX_StringTrimRight(&TempTokenString,1);
 	
 	PX_ScriptASMMapAssume(compiler,&TempTokenString);
 
-	if (px_memequ(TempTokenString.buffer,"GLOBAL[",sizeof("GLOBAL[")-1)&&TempTokenString.buffer[px_strlen(TempTokenString.buffer)-1]==']')
+	if (PX_memequ(TempTokenString.buffer,"GLOBAL[",sizeof("GLOBAL[")-1)&&TempTokenString.buffer[PX_strlen(TempTokenString.buffer)-1]==']')
 	{
-		PX_StringTrimLeft(&TempTokenString,px_strlen("GLOBAL["));
+		PX_StringTrimLeft(&TempTokenString,PX_strlen("GLOBAL["));
 		PX_StringTrimRight(&TempTokenString,1);
 		PX_ScriptASMMapAssume(compiler,&TempTokenString);
 		if (!PX_ScriptAsm_isInt(TempTokenString.buffer))
@@ -369,9 +369,9 @@ static px_bool PX_ScriptAsmLocalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *T
 		return PX_TRUE;
 	}
 
-	if (px_memequ(TempTokenString.buffer,"LOCAL[",sizeof("LOCAL[")-1)&&TempTokenString.buffer[px_strlen(TempTokenString.buffer)-1]==']')
+	if (PX_memequ(TempTokenString.buffer,"LOCAL[",sizeof("LOCAL[")-1)&&TempTokenString.buffer[PX_strlen(TempTokenString.buffer)-1]==']')
 	{
-		PX_StringTrimLeft(&TempTokenString,px_strlen("LOCAL["));
+		PX_StringTrimLeft(&TempTokenString,PX_strlen("LOCAL["));
 		PX_StringTrimRight(&TempTokenString,1);
 		PX_ScriptASMMapAssume(compiler,&TempTokenString);
 
@@ -386,7 +386,7 @@ static px_bool PX_ScriptAsmLocalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *T
 		return PX_TRUE;
 	}
 
-	if (TempTokenString.buffer[0]=='R'&&px_strIsInt(TempTokenString.buffer+1))
+	if (TempTokenString.buffer[0]=='R'&&PX_strIsInt(TempTokenString.buffer+1))
 	{
 		*type=PX_SCRIPT_ASM_OPTYPE_LOCAL_REGREF;
 		*index=PX_ScriptAsm_atoi(TempTokenString.buffer+1);
@@ -412,14 +412,14 @@ static px_bool PX_ScriptAsmGlobalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *
 
 	PX_StringCat(&TempTokenString,Token);
 
-	PX_StringTrimLeft(&TempTokenString,px_strlen("GLOBAL["));
+	PX_StringTrimLeft(&TempTokenString,PX_strlen("GLOBAL["));
 	PX_StringTrimRight(&TempTokenString,1);
 
 	PX_ScriptASMMapAssume(compiler,&TempTokenString);
 
-	if (px_memequ(TempTokenString.buffer,"GLOBAL[",sizeof("GLOBAL[")-1)&&TempTokenString.buffer[px_strlen(TempTokenString.buffer)-1]==']')
+	if (PX_memequ(TempTokenString.buffer,"GLOBAL[",sizeof("GLOBAL[")-1)&&TempTokenString.buffer[PX_strlen(TempTokenString.buffer)-1]==']')
 	{
-		PX_StringTrimLeft(&TempTokenString,px_strlen("GLOBAL["));
+		PX_StringTrimLeft(&TempTokenString,PX_strlen("GLOBAL["));
 		PX_StringTrimRight(&TempTokenString,1);
 		PX_ScriptASMMapAssume(compiler,&TempTokenString);
 		if (!PX_ScriptAsm_isInt(TempTokenString.buffer))
@@ -434,9 +434,9 @@ static px_bool PX_ScriptAsmGlobalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *
 		return PX_TRUE;
 	}
 
-	if (px_memequ(TempTokenString.buffer,"LOCAL[",sizeof("LOCAL[")-1)&&TempTokenString.buffer[px_strlen(TempTokenString.buffer)-1]==']')
+	if (PX_memequ(TempTokenString.buffer,"LOCAL[",sizeof("LOCAL[")-1)&&TempTokenString.buffer[PX_strlen(TempTokenString.buffer)-1]==']')
 	{
-		PX_StringTrimLeft(&TempTokenString,px_strlen("LOCAL["));
+		PX_StringTrimLeft(&TempTokenString,PX_strlen("LOCAL["));
 		PX_StringTrimRight(&TempTokenString,1);
 		PX_ScriptASMMapAssume(compiler,&TempTokenString);
 		if (!PX_ScriptAsm_isInt(TempTokenString.buffer))
@@ -450,9 +450,9 @@ static px_bool PX_ScriptAsmGlobalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *
 		return PX_TRUE;
 	}
 
-	if (px_memequ(TempTokenString.buffer,"BP+",sizeof("BP+")-1)&&PX_ScriptAsm_isInt(TempTokenString.buffer+sizeof("BP+")-1))
+	if (PX_memequ(TempTokenString.buffer,"BP+",sizeof("BP+")-1)&&PX_ScriptAsm_isInt(TempTokenString.buffer+sizeof("BP+")-1))
 	{
-		PX_StringTrimLeft(&TempTokenString,px_strlen("BP+"));
+		PX_StringTrimLeft(&TempTokenString,PX_strlen("BP+"));
 		
 		PX_ScriptASMMapAssume(compiler,&TempTokenString);
 		if (!PX_ScriptAsm_isInt(TempTokenString.buffer))
@@ -465,7 +465,7 @@ static px_bool PX_ScriptAsmGlobalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *
 		PX_StringFree(&TempTokenString);
 		return PX_TRUE;
 	}
-	else if (px_strequ(TempTokenString.buffer,"BP"))
+	else if (PX_strequ(TempTokenString.buffer,"BP"))
 	{
 		*type=PX_SCRIPT_ASM_OPTYPE_GLOBAL_LOCALREF;
 		*index=0;
@@ -474,9 +474,9 @@ static px_bool PX_ScriptAsmGlobalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *
 	}
 
 
-	if (px_memequ(TempTokenString.buffer,"SP+",sizeof("SP+")-1)&&PX_ScriptAsm_isInt(TempTokenString.buffer+sizeof("SP+")-1))
+	if (PX_memequ(TempTokenString.buffer,"SP+",sizeof("SP+")-1)&&PX_ScriptAsm_isInt(TempTokenString.buffer+sizeof("SP+")-1))
 	{
-		PX_StringTrimLeft(&TempTokenString,px_strlen("SP+"));
+		PX_StringTrimLeft(&TempTokenString,PX_strlen("SP+"));
 		PX_ScriptASMMapAssume(compiler,&TempTokenString);
 		if (!PX_ScriptAsm_isInt(TempTokenString.buffer))
 		{
@@ -488,7 +488,7 @@ static px_bool PX_ScriptAsmGlobalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *
 		PX_StringFree(&TempTokenString);
 		return PX_TRUE;
 	}
-	else if (px_strequ(TempTokenString.buffer,"SP"))
+	else if (PX_strequ(TempTokenString.buffer,"SP"))
 	{
 		*type=PX_SCRIPT_ASM_OPTYPE_GLOBAL_SPREF;
 		*index=0;
@@ -497,7 +497,7 @@ static px_bool PX_ScriptAsmGlobalType(PX_SCRIPT_ASM_COMPILER *compiler,px_char *
 	}
 
 
-	if (TempTokenString.buffer[0]=='R'&&px_strIsInt(TempTokenString.buffer+1))
+	if (TempTokenString.buffer[0]=='R'&&PX_strIsInt(TempTokenString.buffer+1))
 	{
 		*type=PX_SCRIPT_ASM_OPTYPE_GLOBAL_REGREF;
 		*index=PX_ScriptAsm_atoi(TempTokenString.buffer+1);
@@ -524,7 +524,7 @@ px_void PX_ScriptAsmUpdateAssumeTable(PX_SCRIPT_ASM_COMPILER *compiler,px_char *
 	PX_SCRIPT_ASM_ASSUME_NODE newNode;
 	for (i=0;i<compiler->assumeTable.size;i++)
 	{
-		if (px_strequ(((PX_SCRIPT_ASM_ASSUME_NODE *)(PX_ListAt(&compiler->assumeTable,i)->pdata))->name.buffer,name))
+		if (PX_strequ(((PX_SCRIPT_ASM_ASSUME_NODE *)(PX_ListAt(&compiler->assumeTable,i)->pdata))->name.buffer,name))
 		{
 			PX_StringClear(&PX_LISTAT(PX_SCRIPT_ASM_ASSUME_NODE,&compiler->assumeTable,i)->assume);
 			PX_StringCat(&PX_LISTAT(PX_SCRIPT_ASM_ASSUME_NODE,&compiler->assumeTable,i)->assume,assume);
@@ -545,13 +545,13 @@ px_bool PX_ScriptAsmAddSourceLabel(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Nam
 	PX_SCRIPT_ASM_LABEL_NODE label;
 	for (i=0;i<compiler->LabelTable.size;i++)
 	{
-		if (px_strequ(PX_LISTAT(PX_SCRIPT_ASM_LABEL_NODE,&compiler->LabelTable,i)->mnemonic,Name))
+		if (PX_strequ(PX_LISTAT(PX_SCRIPT_ASM_LABEL_NODE,&compiler->LabelTable,i)->mnemonic,Name))
 		{
 			PX_ScriptAsmError(&compiler->lexer,"Label name redefined.");
 			return PX_FALSE;
 		}
 	}
-	px_strcpy(label.mnemonic,Name,sizeof(label.mnemonic));
+	PX_strcpy(label.mnemonic,Name,sizeof(label.mnemonic));
 	label.bfunction=bFunction;
 	PX_ListPush(&compiler->LabelTable,&label,sizeof(label));
 	return PX_TRUE;
@@ -562,7 +562,7 @@ px_bool PX_ScriptAsmUpdateLabelAddr(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Na
 	px_int i;
 	for (i=0;i<compiler->LabelTable.size;i++)
 	{
-		if (px_strequ(((PX_SCRIPT_ASM_LABEL_NODE *)(PX_ListAt(&compiler->LabelTable,i)->pdata))->mnemonic,Name))
+		if (PX_strequ(((PX_SCRIPT_ASM_LABEL_NODE *)(PX_ListAt(&compiler->LabelTable,i)->pdata))->mnemonic,Name))
 		{
 			((PX_SCRIPT_ASM_LABEL_NODE *)(PX_ListAt(&compiler->LabelTable,i)->pdata))->binaddr=addr;
 			return PX_TRUE;
@@ -576,7 +576,7 @@ px_int PX_ScriptAsmGetLabelIndex(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Name)
 	px_int i;
 	for (i=0;i<compiler->LabelTable.size;i++)
 	{
-		if (px_strequ(PX_LISTAT(PX_SCRIPT_ASM_LABEL_NODE,&compiler->LabelTable,i)->mnemonic,Name))
+		if (PX_strequ(PX_LISTAT(PX_SCRIPT_ASM_LABEL_NODE,&compiler->LabelTable,i)->mnemonic,Name))
 		{
 			return i;
 		}
@@ -604,7 +604,7 @@ px_int PX_ScriptAsmStringSize(PX_SCRIPT_ASM_COMPILER *compiler)
 	px_int size=0;
 	for (i=0;i<compiler->StringTable.size;i++)
 	{
-		size+= (px_strlen(((PX_SCRIPT_ASM_STRING_NODE *)(PX_ListAt(&compiler->StringTable,i)->pdata))->str.buffer))+1;
+		size+= (PX_strlen(((PX_SCRIPT_ASM_STRING_NODE *)(PX_ListAt(&compiler->StringTable,i)->pdata))->str.buffer))+1;
 	}
 	return size;
 }
@@ -626,7 +626,7 @@ px_void PX_ScriptAsmAddStringConst(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str
 	PX_SCRIPT_ASM_STRING_NODE stringNode,*pLastNode;
 	for (i=0;i<compiler->StringTable.size;i++)
 	{
-		if (px_strequ(((PX_SCRIPT_ASM_STRING_NODE *)(PX_ListAt(&compiler->StringTable,i)->pdata))->str.buffer,Str))
+		if (PX_strequ(((PX_SCRIPT_ASM_STRING_NODE *)(PX_ListAt(&compiler->StringTable,i)->pdata))->str.buffer,Str))
 		{
 			return;
 		}
@@ -635,7 +635,7 @@ px_void PX_ScriptAsmAddStringConst(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str
 	if(compiler->StringTable.size!=0)
 	{
 		pLastNode=(PX_SCRIPT_ASM_STRING_NODE *)(PX_ListAt(&compiler->StringTable,compiler->StringTable.size-1)->pdata);
-		stringNode.addr=pLastNode->addr+px_strlen(pLastNode->str.buffer)+1;
+		stringNode.addr=pLastNode->addr+PX_strlen(pLastNode->str.buffer)+1;
 	}
 	else
 	stringNode.addr=0;
@@ -648,11 +648,11 @@ px_bool PX_ScriptAsmAddMemoryConst(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str
 	px_char hex[3];
 	px_char _byte;
 	PX_SCRIPT_ASM_MEMORY_NODE memoryNode,*pLastNode;
-	if (px_strlen(StringMap)==0)
+	if (PX_strlen(StringMap)==0)
 	{
 		return PX_FALSE;
 	}
-	if (px_strlen(StringMap)&1)
+	if (PX_strlen(StringMap)&1)
 	{
 		PX_ScriptAsmError(&compiler->lexer,"Invalid binary stream map");
 		return PX_FALSE;
@@ -660,7 +660,7 @@ px_bool PX_ScriptAsmAddMemoryConst(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str
 
 	PX_MemoryInit(compiler->mp,&memoryNode.mem);
 	
-	if(!PX_MemoryAlloc(&memoryNode.mem,px_strlen(StringMap)>>1))
+	if(!PX_MemoryAlloc(&memoryNode.mem,PX_strlen(StringMap)>>1))
 		return PX_FALSE;
 
 	while (*StringMap)
@@ -691,7 +691,7 @@ px_dword PX_ScriptAsmGetStringAddr(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str
 	px_int i;
 	for (i=0;i<compiler->StringTable.size;i++)
 	{
-		if (px_strequ(((PX_SCRIPT_ASM_STRING_NODE *)(PX_ListAt(&compiler->StringTable,i)->pdata))->str.buffer,Str))
+		if (PX_strequ(((PX_SCRIPT_ASM_STRING_NODE *)(PX_ListAt(&compiler->StringTable,i)->pdata))->str.buffer,Str))
 		{
 			return ((PX_SCRIPT_ASM_STRING_NODE *)(PX_ListAt(&compiler->StringTable,i)->pdata))->addr;
 		}
@@ -706,14 +706,14 @@ px_dword PX_ScriptAsmGetMemoryAddr(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str
 	px_char _byte;
 	PX_SCRIPT_ASM_MEMORY_NODE memoryNode;
 
-	if (px_strlen(StringMap)&1)
+	if (PX_strlen(StringMap)&1)
 	{
 		PX_ScriptAsmError(&compiler->lexer,"Invalid binary stream map");
 		return PX_FALSE;
 	}
 
 	PX_MemoryInit(compiler->mp,&memoryNode.mem);
-	PX_MemoryAlloc(&memoryNode.mem,px_strlen(StringMap)>>1);
+	PX_MemoryAlloc(&memoryNode.mem,PX_strlen(StringMap)>>1);
 	while (*StringMap)
 	{
 		hex[0]=*StringMap;
@@ -733,7 +733,7 @@ px_dword PX_ScriptAsmGetMemoryAddr(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str
 			continue;
 		}
 
-		if (px_memequ(PX_LISTAT(PX_SCRIPT_ASM_MEMORY_NODE,&compiler->memoriesTable,i)->mem.buffer,memoryNode.mem.buffer,memoryNode.mem.usedsize))
+		if (PX_memequ(PX_LISTAT(PX_SCRIPT_ASM_MEMORY_NODE,&compiler->memoriesTable,i)->mem.buffer,memoryNode.mem.buffer,memoryNode.mem.usedsize))
 		{
 			PX_MemoryFree(&memoryNode.mem);
 			return PX_LISTAT(PX_SCRIPT_ASM_MEMORY_NODE,&compiler->memoriesTable,i)->addr;
@@ -749,12 +749,12 @@ px_void PX_ScriptAsmAddHost(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str)
 	PX_SCRIPT_ASM_HOST_NODE Host;
 	for (i=0;i<compiler->HostTable.size;i++)
 	{
-		if (px_strequ(((PX_SCRIPT_ASM_HOST_NODE *)(PX_ListAt(&compiler->HostTable,i)->pdata))->name,Str))
+		if (PX_strequ(((PX_SCRIPT_ASM_HOST_NODE *)(PX_ListAt(&compiler->HostTable,i)->pdata))->name,Str))
 		{
 			return;
 		}
 	}
-	px_strcpy(Host.name,Str,sizeof(Host.name));
+	PX_strcpy(Host.name,Str,sizeof(Host.name));
 	Host.map=PX_NULL;
 	PX_ListPush(&compiler->HostTable,&Host,sizeof(Host));
 }
@@ -764,7 +764,7 @@ px_int PX_ScriptAsmGetHostIndex(PX_SCRIPT_ASM_COMPILER *compiler,px_char *Str)
 	px_int i;
 	for (i=0;i<compiler->HostTable.size;i++)
 	{
-		if (px_strequ(((PX_SCRIPT_ASM_HOST_NODE *)(PX_ListAt(&compiler->HostTable,i)->pdata))->name,Str))
+		if (PX_strequ(((PX_SCRIPT_ASM_HOST_NODE *)(PX_ListAt(&compiler->HostTable,i)->pdata))->name,Str))
 		{
 			return i;
 		}
@@ -800,7 +800,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 
 				//ASSUME
 				pLexeme=compiler->lexer.CurLexeme.buffer;
-				if (px_strequ("ASSUME",pLexeme))
+				if (PX_strequ("ASSUME",pLexeme))
 				{
 					if ((type=PX_ScriptAsmNexLexeme (&compiler->lexer))!=PX_LEXER_LEXEME_TYPE_TOKEN)
 					{
@@ -808,7 +808,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 						goto _ERROR;
 					}
 					pLexeme=compiler->lexer.CurLexeme.buffer;
-					if (px_strIsNumeric(pLexeme))
+					if (PX_strIsNumeric(pLexeme))
 					{
 						PX_ScriptAsmError(&compiler->lexer,"ASSUME first token should not be numeric!");
 						goto _ERROR;
@@ -826,7 +826,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 					PX_StringClear(&assumeString);
 					PX_StringCat(&assumeString,pLexeme);
 
-					if (px_strequ(assumeString.buffer,assumeName.buffer))
+					if (PX_strequ(assumeString.buffer,assumeName.buffer))
 					{
 						PX_ScriptAsmError(&compiler->lexer,"ASSUME token should not equal.");
 						goto _ERROR;
@@ -843,9 +843,9 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 				//Function or Lable
-				if (pLexeme[px_strlen(pLexeme)-1]==':')
+				if (pLexeme[PX_strlen(pLexeme)-1]==':')
 				{
-					pLexeme[px_strlen(pLexeme)-1]='\0';
+					pLexeme[PX_strlen(pLexeme)-1]='\0';
 					if (PX_ScriptAsmIsValidToken(pLexeme))
 					{
 						if (!PX_ScriptAsmAddSourceLabel(compiler,pLexeme,PX_FALSE))
@@ -858,7 +858,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 
-				if (px_strequ("EXPORT",pLexeme))
+				if (PX_strequ("EXPORT",pLexeme))
 				{
 					if ((type=PX_ScriptAsmNexLexeme (&compiler->lexer))!=PX_LEXER_LEXEME_TYPE_TOKEN)
 					{
@@ -867,7 +867,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 					}
 					pLexeme=compiler->lexer.CurLexeme.buffer;
 
-					if (!px_strequ(pLexeme,"FUNCTION"))
+					if (!PX_strequ(pLexeme,"FUNCTION"))
 					{
 						PX_ScriptAsmError(&compiler->lexer,"Mnemonic \"Function\" not found!");
 						goto _ERROR;
@@ -881,12 +881,12 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 
 					pLexeme=compiler->lexer.CurLexeme.buffer;
 
-					if (pLexeme[px_strlen(pLexeme)-1]!=':')
+					if (pLexeme[PX_strlen(pLexeme)-1]!=':')
 					{
 						PX_ScriptAsmError(&compiler->lexer,"Function name colon expected but not found!");
 						goto _ERROR;
 					}
-					pLexeme[px_strlen(pLexeme)-1]='\0';
+					pLexeme[PX_strlen(pLexeme)-1]='\0';
 					if (PX_ScriptAsmIsValidToken(pLexeme))
 					{
 						if (!PX_ScriptAsmAddSourceLabel(compiler,pLexeme,PX_TRUE))
@@ -899,7 +899,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 					continue;
 				}
 
-				if (px_strequ("FUNCTION",pLexeme))
+				if (PX_strequ("FUNCTION",pLexeme))
 				{
 					if ((type=PX_ScriptAsmNexLexeme (&compiler->lexer))!=PX_LEXER_LEXEME_TYPE_TOKEN)
 					{
@@ -908,12 +908,12 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 					}
 					pLexeme=compiler->lexer.CurLexeme.buffer;
 
-					if (pLexeme[px_strlen(pLexeme)-1]!=':')
+					if (pLexeme[PX_strlen(pLexeme)-1]!=':')
 					{
 						PX_ScriptAsmError(&compiler->lexer,"Function name colon expected but not found!");
 						goto _ERROR;
 					}
-					pLexeme[px_strlen(pLexeme)-1]='\0';
+					pLexeme[PX_strlen(pLexeme)-1]='\0';
 					if (PX_ScriptAsmIsValidToken(pLexeme))
 					{
 						if (!PX_ScriptAsmAddSourceLabel(compiler,pLexeme,PX_FALSE))
@@ -927,7 +927,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 				//.Global
-				if (px_strequ(".GLOBAL",pLexeme))
+				if (PX_strequ(".GLOBAL",pLexeme))
 				{
 					if ((type=PX_ScriptAsmNexLexeme (&compiler->lexer))!=PX_LEXER_LEXEME_TYPE_TOKEN)
 					{
@@ -951,7 +951,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 				//.STACK
-				if (px_strequ(".STACK",pLexeme))
+				if (PX_strequ(".STACK",pLexeme))
 				{
 					if ((type=PX_ScriptAsmNexLexeme (&compiler->lexer))!=PX_LEXER_LEXEME_TYPE_TOKEN)
 					{
@@ -976,7 +976,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 				//.THREAD
-				if (px_strequ(".THREAD",pLexeme))
+				if (PX_strequ(".THREAD",pLexeme))
 				{
 					if ((type=PX_ScriptAsmNexLexeme (&compiler->lexer))!=PX_LEXER_LEXEME_TYPE_TOKEN)
 					{
@@ -1013,7 +1013,7 @@ px_bool PX_ScriptAsmScan(PX_SCRIPT_ASM_COMPILER *compiler)
 				for (i=0;i<compiler->GrammarInstrTable.size;i++)
 				{
 					pinstr=PX_LISTAT(PX_SCRIPT_ASM_GRAMMAR_INSTR,&compiler->GrammarInstrTable,i);
-					if (px_strequ(pinstr->mnemonic,pLexeme))
+					if (PX_strequ(pinstr->mnemonic,pLexeme))
 					{
 						if (pinstr->paramCount==0)
 						{
@@ -1153,7 +1153,7 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 
 				//ASSUME
 				pLexeme=compiler->lexer.CurLexeme.buffer;
-				if (px_strequ("ASSUME",pLexeme))
+				if (PX_strequ("ASSUME",pLexeme))
 				{
 					if ((type=PX_ScriptAsmNexLexeme (&compiler->lexer))!=PX_LEXER_LEXEME_TYPE_TOKEN)
 					{
@@ -1161,7 +1161,7 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 						goto _ERROR;
 					}
 
-					if (px_strIsNumeric(pLexeme))
+					if (PX_strIsNumeric(pLexeme))
 					{
 						PX_ScriptAsmError(&compiler->lexer,"ASSUME first token should not be numeric!");
 						goto _ERROR;
@@ -1177,7 +1177,7 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 					pLexeme=compiler->lexer.CurLexeme.buffer;
 					PX_StringSet(&assumeString,pLexeme);
 
-					if (px_strequ(assumeString.buffer,assumeName.buffer))
+					if (PX_strequ(assumeString.buffer,assumeName.buffer))
 					{
 						PX_ScriptAsmError(&compiler->lexer,"ASSUME token should not equal.");
 						goto _ERROR;
@@ -1194,9 +1194,9 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 				//Function or Lable
-				if (pLexeme[px_strlen(pLexeme)-1]==':')
+				if (pLexeme[PX_strlen(pLexeme)-1]==':')
 				{
-					pLexeme[px_strlen(pLexeme)-1]='\0';
+					pLexeme[PX_strlen(pLexeme)-1]='\0';
 					if (PX_ScriptAsmIsValidToken(pLexeme))
 					{
 						if (!PX_ScriptAsmUpdateLabelAddr(compiler,pLexeme,InstrBinOffset))
@@ -1207,12 +1207,12 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 					continue;
 				}
 
-				if (px_strequ("EXPORT",pLexeme))
+				if (PX_strequ("EXPORT",pLexeme))
 				{
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
 					pLexeme=compiler->lexer.CurLexeme.buffer;
-					pLexeme[px_strlen(pLexeme)-1]='\0';
+					pLexeme[PX_strlen(pLexeme)-1]='\0';
 					if (PX_ScriptAsmIsValidToken(pLexeme))
 					{
 						if (!PX_ScriptAsmUpdateLabelAddr(compiler,pLexeme,InstrBinOffset))
@@ -1223,11 +1223,11 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 					continue;
 				}
 
-				if (px_strequ("FUNCTION",pLexeme))
+				if (PX_strequ("FUNCTION",pLexeme))
 				{
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
 					pLexeme=compiler->lexer.CurLexeme.buffer;
-					pLexeme[px_strlen(pLexeme)-1]='\0';
+					pLexeme[PX_strlen(pLexeme)-1]='\0';
 					if (PX_ScriptAsmIsValidToken(pLexeme))
 					{
 						if (!PX_ScriptAsmUpdateLabelAddr(compiler,pLexeme,InstrBinOffset))
@@ -1239,7 +1239,7 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 				//.Global
-				if (px_strequ(".GLOBAL",pLexeme))
+				if (PX_strequ(".GLOBAL",pLexeme))
 				{
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
@@ -1247,7 +1247,7 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 				//.Stack
-				if (px_strequ(".STACK",pLexeme))
+				if (PX_strequ(".STACK",pLexeme))
 				{
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
@@ -1255,7 +1255,7 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 				}
 
 				//.Thread
-				if (px_strequ(".THREAD",pLexeme))
+				if (PX_strequ(".THREAD",pLexeme))
 				{
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
 					PX_ScriptAsmNexLexeme (&compiler->lexer);
@@ -1267,9 +1267,9 @@ px_bool PX_ScriptAsmCc(PX_SCRIPT_ASM_COMPILER *compiler)
 				state=PX_LexerGetState(&compiler->lexer);
 				for (i=0;i<compiler->GrammarInstrTable.size;i++)
 				{
-					px_memset(&instrbin,0,sizeof(instrbin));
+					PX_memset(&instrbin,0,sizeof(instrbin));
 					pinstr=(PX_SCRIPT_ASM_GRAMMAR_INSTR *)PX_ListAt(&compiler->GrammarInstrTable,i)->pdata;
-					if (px_strequ(pinstr->mnemonic,pLexeme))
+					if (PX_strequ(pinstr->mnemonic,pLexeme))
 					{
 						instrbin.opCode=pinstr->opcode;
 
@@ -1837,7 +1837,7 @@ px_bool PX_ScriptAsmCompile(px_memorypool *mp,px_char *asmcode,px_memory *binmem
 
 	//Header
 	woffset=sizeof(PX_SCRIPT_ASM_HEADER);
-	px_memset(&header,0,sizeof(header));
+	PX_memset(&header,0,sizeof(header));
 	header.magic=*((px_dword *)"PASM");
 	header.stacksize=compiler.stacksize;
 	header.globalsize=compiler.globalsize;
@@ -1861,8 +1861,8 @@ px_bool PX_ScriptAsmCompile(px_memorypool *mp,px_char *asmcode,px_memory *binmem
 	{
 		if (PX_LISTAT(PX_SCRIPT_ASM_LABEL_NODE,&compiler.LabelTable,i)->bfunction)
 		{
-			px_memset(expFunc.name,0,sizeof(expFunc.name));
-			px_strcpy(expFunc.name,PX_LISTAT(PX_SCRIPT_ASM_LABEL_NODE,&compiler.LabelTable,i)->mnemonic,sizeof(expFunc.name));
+			PX_memset(expFunc.name,0,sizeof(expFunc.name));
+			PX_strcpy(expFunc.name,PX_LISTAT(PX_SCRIPT_ASM_LABEL_NODE,&compiler.LabelTable,i)->mnemonic,sizeof(expFunc.name));
 			expFunc.Addr=PX_LISTAT(PX_SCRIPT_ASM_LABEL_NODE,&compiler.LabelTable,i)->binaddr;
 			PX_MemoryCat(binmemory,&expFunc,sizeof(expFunc));
 		}
@@ -1870,8 +1870,8 @@ px_bool PX_ScriptAsmCompile(px_memorypool *mp,px_char *asmcode,px_memory *binmem
 	
 	for (i=0;i<compiler.HostTable.size;i++)
 	{
-			px_memset(host.name,0,sizeof(host.name));
-			px_strcpy(host.name,PX_LISTAT(PX_SCRIPT_ASM_HOST_NODE,&compiler.HostTable,i)->name,sizeof(host.name));
+			PX_memset(host.name,0,sizeof(host.name));
+			PX_strcpy(host.name,PX_LISTAT(PX_SCRIPT_ASM_HOST_NODE,&compiler.HostTable,i)->name,sizeof(host.name));
 			host.map=PX_NULL;
 			expFunc.Addr=0;
 			PX_MemoryCat(binmemory,&host,sizeof(host));
@@ -1880,7 +1880,7 @@ px_bool PX_ScriptAsmCompile(px_memorypool *mp,px_char *asmcode,px_memory *binmem
 	for (i=0;i<compiler.StringTable.size;i++)
 	{
 		pbuf=PX_LISTAT(PX_SCRIPT_ASM_STRING_NODE,&compiler.StringTable,i)->str.buffer;
-		PX_MemoryCat(binmemory,pbuf,px_strlen(pbuf)+1);
+		PX_MemoryCat(binmemory,pbuf,PX_strlen(pbuf)+1);
 	}
 
 	for (i=0;i<compiler.memoriesTable.size;i++)

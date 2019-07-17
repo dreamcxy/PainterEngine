@@ -17,7 +17,7 @@ px_bool PX_TransmissionInit(px_memorypool *mp, PX_Transmission *T,px_dword bridg
 	T->queueindex=0;
 	T->connectTry=0;
 	T->max_recv_size=-1;
-	px_memset(T->sendingQueue,0,sizeof(T->sendingQueue));
+	PX_memset(T->sendingQueue,0,sizeof(T->sendingQueue));
 	T->status=PX_TRANSMISSION_STATUS_STANDBY;
 	return PX_TRUE;
 }
@@ -49,14 +49,14 @@ px_bool PX_TransmissionSend(PX_Transmission *trans,px_byte *data,px_dword size)
 		trans->alloc_datasize=size;
 	}
 
-	px_memset(trans->requestBlock,0,sizeof(trans->requestBlock));
+	PX_memset(trans->requestBlock,0,sizeof(trans->requestBlock));
 	
 	if (!trans->data)
 	{
 		return PX_FALSE;
 	}
 
-	px_memcpy(trans->data,data,size);
+	PX_memcpy(trans->data,data,size);
 	trans->connectTry=0;
 	trans->status=PX_TRANSMISSION_STATUS_CONNECT;
 	trans->elpased=PX_TRANSMISSION_CONNECT_DURATION;
@@ -90,7 +90,7 @@ px_bool PX_TransmissionWriteBlock(PX_Transmission *trans,px_byte *data,px_int bu
 	}
 	if (trans->encode)
 	{
-		px_memcpy(sdata,data,bufferSize);
+		PX_memcpy(sdata,data,bufferSize);
 		trans->encode(sdata,bufferSize);
 		if (trans->write(sdata,bufferSize))
 		{
@@ -200,12 +200,12 @@ px_bool PX_TransmissionUpdate(PX_Transmission *trans,px_int elpased)
 				//Copy first block
 				if(trans->size<=PX_TRANSMISSION_BLOCK_SIZE)
 				{
-					px_memcpy(trans->data,R_datagram.connect.data,trans->size);
+					PX_memcpy(trans->data,R_datagram.connect.data,trans->size);
 					trans->offset+=trans->size;
 				}
 				else
 				{
-					px_memcpy(trans->data,R_datagram.connect.data,PX_TRANSMISSION_BLOCK_SIZE);
+					PX_memcpy(trans->data,R_datagram.connect.data,PX_TRANSMISSION_BLOCK_SIZE);
 					trans->offset+=PX_TRANSMISSION_BLOCK_SIZE;
 				}
 
@@ -222,7 +222,7 @@ px_bool PX_TransmissionUpdate(PX_Transmission *trans,px_int elpased)
 						trans->offset+=PX_TRANSMISSION_BLOCK_SIZE;
 					}
 				}
-				px_memset(trans->sendingQueue,0,sizeof(trans->sendingQueue));
+				PX_memset(trans->sendingQueue,0,sizeof(trans->sendingQueue));
 				trans->status=PX_TRANSMISSION_STATUS_RECEIVING;
 				trans->recvElpased=0;
 
@@ -279,9 +279,9 @@ px_bool PX_TransmissionUpdate(PX_Transmission *trans,px_int elpased)
 			W_datagram.connect.opcode=PX_TRANSMISSION_OPCODE_CONNECT;
 			W_datagram.connect.size=trans->size;
 			if(trans->size<PX_TRANSMISSION_BLOCK_SIZE)
-				px_memcpy(W_datagram.connect.data,trans->data,trans->size);
+				PX_memcpy(W_datagram.connect.data,trans->data,trans->size);
 			else
-				px_memcpy(W_datagram.connect.data,trans->data,PX_TRANSMISSION_BLOCK_SIZE);
+				PX_memcpy(W_datagram.connect.data,trans->data,PX_TRANSMISSION_BLOCK_SIZE);
 
 			trans->connectTry++;
 			if(!PX_TransmissionWriteBlock(trans,(px_byte *)&W_datagram.connect,sizeof(W_datagram.connect)))
@@ -322,7 +322,7 @@ px_bool PX_TransmissionUpdate(PX_Transmission *trans,px_int elpased)
 							//copy data to buffer
 							//printf("accept block %d\n",R_datagram.data.blockIndex);
 							trans->recvElpased=0;
-							px_memcpy(trans->data+R_datagram.data.blockIndex*PX_TRANSMISSION_BLOCK_SIZE,R_datagram.data.data,PX_TRANSMISSION_BLOCK_SIZE);
+							PX_memcpy(trans->data+R_datagram.data.blockIndex*PX_TRANSMISSION_BLOCK_SIZE,R_datagram.data.data,PX_TRANSMISSION_BLOCK_SIZE);
 
 							if (trans->offset<trans->size)
 							{
@@ -501,9 +501,9 @@ px_bool PX_TransmissionUpdate(PX_Transmission *trans,px_int elpased)
 					{
 						W_datagram.data.blockIndex=trans->sendingQueue[trans->queueindex];
 						if(trans->sendingQueue[trans->queueindex]!=trans->blockCount-1)
-							px_memcpy(W_datagram.data.data,trans->data+trans->sendingQueue[trans->queueindex]*PX_TRANSMISSION_BLOCK_SIZE,PX_TRANSMISSION_BLOCK_SIZE);
+							PX_memcpy(W_datagram.data.data,trans->data+trans->sendingQueue[trans->queueindex]*PX_TRANSMISSION_BLOCK_SIZE,PX_TRANSMISSION_BLOCK_SIZE);
 						else
-							px_memcpy(W_datagram.data.data,trans->data+trans->sendingQueue[trans->queueindex]*PX_TRANSMISSION_BLOCK_SIZE,trans->size-PX_TRANSMISSION_BLOCK_SIZE*(trans->blockCount-1));
+							PX_memcpy(W_datagram.data.data,trans->data+trans->sendingQueue[trans->queueindex]*PX_TRANSMISSION_BLOCK_SIZE,trans->size-PX_TRANSMISSION_BLOCK_SIZE*(trans->blockCount-1));
 
 						//printf("send block %d\n",trans->sendingQueue[trans->queueindex]);
 						trans->sendingQueue[trans->queueindex]=0;
@@ -536,8 +536,8 @@ px_void PX_TransmissionCompleted(PX_Transmission *trans)
 	trans->sendingduration=0;
 	trans->queueindex=0;
 	trans->status=PX_TRANSMISSION_STATUS_STANDBY;
-	px_memset(trans->requestBlock,0,sizeof(trans->requestBlock));
-	px_memset(trans->sendingQueue,0,sizeof(trans->sendingQueue));
+	PX_memset(trans->requestBlock,0,sizeof(trans->requestBlock));
+	PX_memset(trans->sendingQueue,0,sizeof(trans->sendingQueue));
 }
 
 px_void PX_TransmissionFree(PX_Transmission *trans)
@@ -556,7 +556,7 @@ px_bool PX_TransmissionRecv(PX_Transmission *trans,px_byte *data,px_dword size)
 			return PX_FALSE;
 		}
 		trans->acceptBlock=0;
-		px_memcpy(data,trans->data,trans->size);
+		PX_memcpy(data,trans->data,trans->size);
 		return PX_TRUE;
 	}
 	return PX_FALSE;

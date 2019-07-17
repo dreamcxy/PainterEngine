@@ -26,7 +26,7 @@
 
 
 
-#define px_countof(x) (sizeof(x)/sizeof(x[0]))
+#define PX_COUNTOF(x) (sizeof(x)/sizeof(x[0]))
 
 
 
@@ -113,10 +113,10 @@ typedef struct __px_complex
 //////////////////////////////////////////////////////////////////////////
 //endian
 
-px_dword px_htonl(px_dword h);
-px_dword px_ntohl(px_dword n);
-px_word px_htons(px_word h);
-px_word px_ntohs(px_word n);
+px_dword PX_htonl(px_dword h);
+px_dword PX_ntohl(px_dword n);
+px_word PX_htons(px_word h);
+px_word PX_ntohs(px_word n);
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -174,10 +174,10 @@ px_int  PX_atoi(px_char str[]);
 px_float PX_atof(px_char fstr[]);
 PX_RETURN_STRING PX_ftos(float f, int precision);
 PX_RETURN_STRING PX_itos(px_int num,px_int radix);
-int PX_ftoa(float f, char *outbuf, int maxlen, int precision);
-int PX_itoa(px_int num,px_char *str,px_int MaxStrSize,px_int radix);
+px_int PX_ftoa(float f, char *outbuf, int maxlen, int precision);
+px_int PX_itoa(px_int num,px_char *str,px_int MaxStrSize,px_int radix);
 px_char *PX_strchr(const char *s,int ch);
-px_char* px_strstr(const char* dest, const char* src);
+px_char* PX_strstr(const char* dest, const char* src);
 
 ///////////////////////////////////////////////////////////////////////////
 //rectangle
@@ -194,22 +194,22 @@ px_bool PX_isCircleCrossCircle(px_point center1,px_float radius1,px_point center
 
 //////////////////////////////////////////////////////////////////////////
 //memory
-void px_memset(void *dst,px_byte byte,px_uint size);
-void px_memdwordset(void *dst,px_dword dw,px_uint count);
-px_bool px_memequ(const void *dst,const void *src,px_uint size);
-px_void px_memcpy(px_void *dst,const px_void *src,px_uint size);
-px_void px_strcpy(px_char *dst,const px_char *src,px_uint size);
-px_void px_strcat(px_char *src,const px_char *cat);
-px_void px_strset(px_void *dst,const px_void *src);
-px_int px_strlen(const px_char *dst);
-px_int px_strcmp(const px_char *str1, const px_char *str2);
-px_bool px_strequ(px_char *src,char *dst);
-px_void px_strupr(px_char *src);
-px_void px_strlwr(px_char *src);
-px_bool px_strIsNumeric(px_char *str);
-px_bool px_strIsFloat(px_char *str);
-px_bool px_strIsInt(px_char *str);
-px_bool px_charIsNumeric(px_char ch);
+void PX_memset(void *dst,px_byte byte,px_int size);
+void PX_memdwordset(void *dst,px_dword dw,px_int count);
+px_bool PX_memequ(const void *dst,const void *src,px_int size);
+px_void PX_memcpy(px_void *dst,const px_void *src,px_int size);
+px_void PX_strcpy(px_char *dst,const px_char *src,px_int size);
+px_void PX_strcat(px_char *src,const px_char *cat);
+px_void PX_strset(px_void *dst,const px_void *src);
+px_int PX_strlen(const px_char *dst);
+px_int PX_strcmp(const px_char *str1, const px_char *str2);
+px_bool PX_strequ(const px_char *src,const char *dst);
+px_void PX_strupr(px_char *src);
+px_void PX_strlwr(px_char *src);
+px_bool PX_strIsNumeric(const px_char *str);
+px_bool PX_strIsFloat(const px_char *str);
+px_bool PX_strIsInt(const px_char *str);
+px_bool PX_charIsNumeric(px_char ch);
 
 typedef enum
 {
@@ -230,7 +230,7 @@ typedef struct
 px_stringformat PX_STRINGFORMAT_INT(px_int _i);
 px_stringformat PX_STRINGFORMAT_FLOAT(px_float _f);
 px_stringformat PX_STRINGFORMAT_STRING(const px_char *_s);
-px_int px_sprintf8(px_char *str,px_int str_size,px_char fmt[],\
+px_int PX_sprintf8(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _1,\
 	px_stringformat _2,\
 	px_stringformat _3,\
@@ -240,7 +240,7 @@ px_int px_sprintf8(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _7,\
 	px_stringformat _8\
 	);
-px_int px_sprintf7(px_char *str,px_int str_size,px_char fmt[],\
+px_int PX_sprintf7(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _1,\
 	px_stringformat _2,\
 	px_stringformat _3,\
@@ -249,7 +249,7 @@ px_int px_sprintf7(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _6,\
 	px_stringformat _7
 	);
-px_int px_sprintf6(px_char *str,px_int str_size,px_char fmt[],\
+px_int PX_sprintf6(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _1,\
 	px_stringformat _2,\
 	px_stringformat _3,\
@@ -257,29 +257,29 @@ px_int px_sprintf6(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _5,\
 	px_stringformat _6\
 	);
-px_int px_sprintf5(px_char *str,px_int str_size,px_char fmt[],\
+px_int PX_sprintf5(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _1,\
 	px_stringformat _2,\
 	px_stringformat _3,\
 	px_stringformat _4,\
 	px_stringformat _5\
 	);
-px_int px_sprintf4(px_char *str,px_int str_size,px_char fmt[],\
+px_int PX_sprintf4(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _1,\
 	px_stringformat _2,\
 	px_stringformat _3,\
 	px_stringformat _4\
 	);
-px_int px_sprintf3(px_char *str,px_int str_size,px_char fmt[],\
+px_int PX_sprintf3(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _1,\
 	px_stringformat _2,\
 	px_stringformat _3\
 	);
-px_int px_sprintf2(px_char *str,px_int str_size,px_char fmt[],\
+px_int PX_sprintf2(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _1,\
 	px_stringformat _2\
 	);
-px_int px_sprintf1(px_char *str,px_int str_size,px_char fmt[],\
+px_int PX_sprintf1(px_char *str,px_int str_size,px_char fmt[],\
 	px_stringformat _1\
 	);
 /*px_int px_sprintf(px_char *str,px_int str_size,px_char fmt[],...);*/

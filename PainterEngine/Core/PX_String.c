@@ -30,7 +30,7 @@ px_void PX_StringTrim(px_string *str)
 			str->buffer[i++]=str->buffer[loft++];
 		}
 		str->buffer[i]='\0';
-		i=px_strlen(str->buffer);
+		i=PX_strlen(str->buffer);
 		if (i)
 		{
 			i--;
@@ -52,7 +52,7 @@ px_void PX_StringTrimLeft(px_string *str,px_int leftCount)
 	{
 		return;
 	}
-	if (leftCount>=px_strlen(str->buffer))
+	if (leftCount>=PX_strlen(str->buffer))
 	{
 		PX_StringClear(str);
 	}
@@ -72,13 +72,13 @@ px_void PX_StringTrimRight(px_string *str,px_int RightCount)
 	{
 		return;
 	}
-	if (RightCount>=px_strlen(str->buffer))
+	if (RightCount>=PX_strlen(str->buffer))
 	{
 		PX_StringClear(str);
 	}
 	else
 	{
-		str->buffer[px_strlen(str->buffer)-RightCount]='\0';
+		str->buffer[PX_strlen(str->buffer)-RightCount]='\0';
 	}
 }
 
@@ -96,7 +96,7 @@ px_bool PX_StringInit(px_memorypool *mp,px_string *str)
 	str->buffer=(px_char *)MP_Malloc(mp,8);
 	if(!str->buffer)return PX_FALSE;
 	str->bufferlen=8;
-	px_memset(str->buffer,0,8);
+	PX_memset(str->buffer,0,8);
 	str->mp=mp;
 	return PX_TRUE;
 }
@@ -110,7 +110,7 @@ px_void PX_StringInitAlloc(px_memorypool *mp,px_string *str,px_int allocSize)
 	}
 	str->buffer=(px_char *)MP_Malloc(mp,allocSize);
 	str->bufferlen=allocSize;
-	px_memset(str->buffer,0,size);
+	PX_memset(str->buffer,0,size);
 	str->mp=mp;
 }
 
@@ -199,7 +199,7 @@ px_bool PX_StringFormat8(px_string *str,px_char fmt[],px_stringformat _1, px_str
 	px_uint finalLen=0;
 	px_uchar shl=0;
 	
-	finalLen=px_sprintf8(PX_NULL,0,fmt,_1,_2,_3,_4,_5,_6,_7,_8);
+	finalLen=PX_sprintf8(PX_NULL,0,fmt,_1,_2,_3,_4,_5,_6,_7,_8);
 
 	oldptr=str->buffer;
 
@@ -211,7 +211,7 @@ px_bool PX_StringFormat8(px_string *str,px_char fmt[],px_stringformat _1, px_str
 		return PX_FALSE;
 	}
 	
-	finalLen=px_sprintf8(str->buffer,str->bufferlen,fmt,_1,_2,_3,_4,_5,_6,_7,_8);
+	finalLen=PX_sprintf8(str->buffer,str->bufferlen,fmt,_1,_2,_3,_4,_5,_6,_7,_8);
 
 	if(oldptr)
 		MP_Free(str->mp,oldptr);
@@ -259,11 +259,11 @@ px_bool PX_StringSet(px_string *str,px_char fmt[])
 	px_uint finalLen=0;
 	px_uchar shl=0;
 
-	finalLen=px_strlen(fmt);
+	finalLen=PX_strlen(fmt);
 
 	if (finalLen<(px_uint)str->bufferlen)
 	{
-		px_strset(str->buffer,fmt);
+		PX_strset(str->buffer,fmt);
 		return PX_TRUE;
 	}
 
@@ -276,7 +276,7 @@ px_bool PX_StringSet(px_string *str,px_char fmt[])
 	{
 		return PX_FALSE;
 	}
-	px_strset(str->buffer,fmt);
+	PX_strset(str->buffer,fmt);
 
 	if(oldptr)
 		MP_Free(str->mp,oldptr);
@@ -290,22 +290,22 @@ px_float PX_StringToFloat(px_string *str)
 
 px_bool PX_StringIsNumeric(px_string *str)
 {
-	return px_strIsNumeric(str->buffer);
+	return PX_strIsNumeric(str->buffer);
 }
 
 px_bool PX_StringIsFloat(px_string *str)
 {
-	return px_strIsFloat(str->buffer);
+	return PX_strIsFloat(str->buffer);
 }
 
 px_bool PX_StringCat(px_string *str,px_char *str2)
 {
 	px_uchar shl=0;
 	px_char *old=str->buffer;
-	px_int length=px_strlen(str->buffer)+px_strlen(str2);
+	px_int length=PX_strlen(str->buffer)+PX_strlen(str2);
 	if (length<str->bufferlen)
 	{
-		px_strcat(str->buffer,str2);
+		PX_strcat(str->buffer,str2);
 		return PX_TRUE;
 	}
 
@@ -314,8 +314,8 @@ px_bool PX_StringCat(px_string *str,px_char *str2)
 	str->buffer=(px_char *)MP_Malloc(str->mp,str->bufferlen);
 	if(!str->buffer)return PX_FALSE;
 	str->buffer[0]='\0';
-	px_strcat(str->buffer,old);
-	px_strcat(str->buffer,str2);
+	PX_strcat(str->buffer,old);
+	PX_strcat(str->buffer,str2);
 	if(old)
 	MP_Free(str->mp,old);
 	return PX_TRUE;
@@ -330,7 +330,7 @@ px_bool PX_StringCatChar(px_string *str,px_char ch)
 {
 	px_uchar shl=0;
 	px_char *old=str->buffer;
-	px_int length=px_strlen(str->buffer)+1;
+	px_int length=PX_strlen(str->buffer)+1;
 	if (length<str->bufferlen)
 	{
 		str->buffer[length-1]=ch;
@@ -343,7 +343,7 @@ px_bool PX_StringCatChar(px_string *str,px_char ch)
 	str->buffer=(px_char *)MP_Malloc(str->mp,str->bufferlen);
 	if(!str->buffer)return PX_FALSE;
 	str->buffer[0]='\0';
-	px_strcat(str->buffer,old);
+	PX_strcat(str->buffer,old);
 	str->buffer[length-1]=ch;
 	str->buffer[length]='\0';
 	if(old)
@@ -353,7 +353,7 @@ px_bool PX_StringCatChar(px_string *str,px_char ch)
 
 px_int PX_StringLen(px_string *str)
 {
-	return px_strlen(str->buffer);
+	return PX_strlen(str->buffer);
 }
 
 px_bool PX_StringCopy(px_string *dest,px_string *res)
@@ -369,10 +369,10 @@ px_bool PX_StringCopy(px_string *dest,px_string *res)
 
 px_bool PX_StringInsertChar(px_string *str,px_int index,px_char ch)
 {
-	px_int cpysize=px_strlen(str->buffer+index);
+	px_int cpysize=PX_strlen(str->buffer+index);
 	if (PX_StringCatChar(str,' '))
 	{
-		px_memcpy(str->buffer+index+1,str->buffer+index,cpysize);
+		PX_memcpy(str->buffer+index+1,str->buffer+index,cpysize);
 		str->buffer[index]=ch;
 	}
 	return PX_FALSE;
@@ -380,9 +380,9 @@ px_bool PX_StringInsertChar(px_string *str,px_int index,px_char ch)
 
 px_bool PX_StringRemoveChar(px_string *str,px_int index)
 {
-	if (index>=0&&index<px_strlen(str->buffer))
+	if (index>=0&&index<PX_strlen(str->buffer))
 	{
-		px_memcpy(str->buffer+index,str->buffer+index+1,px_strlen(str->buffer+index));
+		PX_memcpy(str->buffer+index,str->buffer+index+1,PX_strlen(str->buffer+index));
 		return PX_TRUE;
 	}
 	return PX_FALSE;
@@ -400,12 +400,12 @@ px_void PX_StringReplace(px_string *str,px_char *source,px_char *replaceto)
 	PX_StringCopy(&tempstr,str);
 	PX_StringClear(str);
 
-	for (i=0;i<PX_StringLen(&tempstr)-px_strlen(source);i++)
+	for (i=0;i<PX_StringLen(&tempstr)-PX_strlen(source);i++)
 	{
-		if (px_memequ(tempstr.buffer+i,source,px_strlen(source)))
+		if (PX_memequ(tempstr.buffer+i,source,PX_strlen(source)))
 		{
 			PX_StringCat(str,replaceto);
-			i+=px_strlen(source)-1;
+			i+=PX_strlen(source)-1;
 		}
 		else
 		{
@@ -426,7 +426,7 @@ px_void PX_StringReplaceRange(px_string *str,px_int startindex,px_int endindex,p
 		return;
 	}
 
-	if (endindex>=px_strlen(str->buffer))
+	if (endindex>=PX_strlen(str->buffer))
 	{
 		PX_ERROR("string trim error");
 		return;
@@ -525,7 +525,7 @@ px_bool PX_StringTrimer_Solve(px_string *pstring,px_char *parseCode,px_char *Rep
 				if (mark[regindex])
 				{
 					//reg 0 as wildcard
-					if (px_strequ(reg[regindex].buffer,matchedString.buffer)||!regindex)
+					if (PX_strequ(reg[regindex].buffer,matchedString.buffer)||!regindex)
 					{
 						matchd=PX_TRUE;
 					}
@@ -616,7 +616,7 @@ px_bool PX_StringTrimer_Solve(px_string *pstring,px_char *parseCode,px_char *Rep
 			PX_StringReplaceRange(pstring,oft,resi-1,replaceString.buffer);
 			ret=PX_TRUE;
 
-			oft+=px_strlen(replaceString.buffer);
+			oft+=PX_strlen(replaceString.buffer);
 
 			PX_StringFree(&replaceString);
 		}

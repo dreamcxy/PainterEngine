@@ -20508,9 +20508,9 @@ static px_uchar const AsciiLib[95][16] = {
 px_void PX_GetASCIICode(px_uchar* pBuffer,px_uchar ASCII)
 {  
 	if(ASCII-32<95)
-	px_memcpy(pBuffer,(px_void *)AsciiLib[(ASCII - 32)] ,16);
+	PX_memcpy(pBuffer,(px_void *)AsciiLib[(ASCII - 32)] ,16);
 	else
-	px_memset(pBuffer,0xff,16);
+	PX_memset(pBuffer,0xff,16);
 }
 
 
@@ -20521,9 +20521,9 @@ px_void PX_GetGBKCode(px_uchar* pBuffer,px_uchar * c)
    Low8bit=*(c+1);
 
    if(((High8bit-0xb0)*94+Low8bit-0xa1)*26+25<sizeof(HzLib))
-   px_memcpy(pBuffer,(px_void *)(HzLib+((High8bit-0xb0)*94+Low8bit-0xa1)*26),26);
+   PX_memcpy(pBuffer,(px_void *)(HzLib+((High8bit-0xb0)*94+Low8bit-0xa1)*26),26);
    else
-	px_memset(pBuffer,0xff,26);
+	PX_memset(pBuffer,0xff,26);
 }
 
 px_void PX_FontDrawGBK(px_surface *psurface,px_int x,px_int y,px_uchar *str,px_color Color)
@@ -20764,10 +20764,10 @@ px_bool PX_FontModuleLoad(PX_FontModule *module,px_byte *buffer,px_int size)
 			goto _ERROR;
 		}
 		
-		px_memcpy(cpy,pcHeader,sizeof(PX_FontModule_Charactor_Header));
+		PX_memcpy(cpy,pcHeader,sizeof(PX_FontModule_Charactor_Header));
 
 		if(!PX_ShapeCreate(module->mp,&cpy->shape,cpy->header.Font_Width,cpy->header.Font_Height)) goto _ERROR;
-		px_memcpy(cpy->shape.alpha,pData,cpy->header.Font_Width*cpy->header.Font_Height);
+		PX_memcpy(cpy->shape.alpha,pData,cpy->header.Font_Width*cpy->header.Font_Height);
 		offset+=cpy->header.Font_Width*cpy->header.Font_Height;
 		PX_MapPut(&module->characters_map,hex,cpy);
 	}

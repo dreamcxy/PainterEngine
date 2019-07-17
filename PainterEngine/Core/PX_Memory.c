@@ -22,16 +22,16 @@ px_bool PX_MemoryCat(px_memory *memory,px_void *buffer,px_int size)
 		memory->buffer=(px_byte*)MP_Malloc(memory->mp,memory->allocsize);
 		if(!memory->buffer) return PX_FALSE;
 		if(old)
-		px_memcpy(memory->buffer,old,memory->usedsize);
+		PX_memcpy(memory->buffer,old,memory->usedsize);
 
-		px_memcpy(memory->buffer+memory->usedsize,buffer,size);
+		PX_memcpy(memory->buffer+memory->usedsize,buffer,size);
 
 		if(old)
 		MP_Free(memory->mp,old);
 	}
 	else
 	{
-		px_memcpy(memory->buffer+memory->usedsize,buffer,size);
+		PX_memcpy(memory->buffer+memory->usedsize,buffer,size);
 	}
 	memory->usedsize+=size;
 	return PX_TRUE;
@@ -77,7 +77,7 @@ px_byte *PX_MemoryFine(px_memory *memory,px_void *buffer,px_int size)
 	}
 	for (offest=0;offest<memory->usedsize-size+1;offest++)
 	{
-		if (px_memequ(memory->buffer+offest,buffer,size))
+		if (PX_memequ(memory->buffer+offest,buffer,size))
 		{
 			return (memory->buffer+offest);
 		}
@@ -109,9 +109,9 @@ px_bool PX_MemoryCopy(px_memory *memory,px_void *buffer,px_int startoffset,px_in
 			return PX_FALSE;
 		}
 		if(old)
-			px_memcpy(memory->buffer,old,memory->usedsize);
+			PX_memcpy(memory->buffer,old,memory->usedsize);
 
-		px_memcpy(memory->buffer+startoffset,buffer,size);
+		PX_memcpy(memory->buffer+startoffset,buffer,size);
 
 		if(old)
 			MP_Free(memory->mp,old);
@@ -125,7 +125,7 @@ px_bool PX_MemoryCopy(px_memory *memory,px_void *buffer,px_int startoffset,px_in
 			memory->usedsize=startoffset+size;
 		}
 
-		px_memcpy(memory->buffer+startoffset,buffer,size);
+		PX_memcpy(memory->buffer+startoffset,buffer,size);
 
 	}
 	return PX_TRUE;

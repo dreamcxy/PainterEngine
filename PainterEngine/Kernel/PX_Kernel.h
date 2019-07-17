@@ -18,5 +18,4 @@
 #include "PX_TransmissionProtocal.h"
 #include "PX_Sync.h"
 #include "PX_Object.h"
-#include "PX_World.h"
 #endif

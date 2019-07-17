@@ -9,7 +9,7 @@ px_bool PX_SurfaceCreate(px_memorypool *mp,px_uint width,px_uint height,px_surfa
 		surface->width=width;
 		surface->surfaceBuffer=(px_color *)p;
 		surface->MP=mp;
-		px_memdwordset(p,0,height*width);
+		PX_memdwordset(p,0,height*width);
 		return PX_TRUE;
 	}
 	return PX_FALSE;
@@ -120,7 +120,7 @@ px_void PX_SurfaceClear(px_surface *psurface, px_int left, px_int top, px_int ri
 
 	for (i=top;i<=bottom;i++)
 	{
-		px_memdwordset(psurface->surfaceBuffer+i*psurface->width+left,color._argb.ucolor,right-left+1);
+		PX_memdwordset(psurface->surfaceBuffer+i*psurface->width+left,color._argb.ucolor,right-left+1);
 	}
 	
 }

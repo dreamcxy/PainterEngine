@@ -88,7 +88,7 @@ static px_void PX_SyncFrameServerHandle_StatusConnect(PX_SyncFrame_Server *sync_
 	PX_Sync_Port port;
 	px_int i;
 
-	px_memset(&port,0,sizeof(PX_Sync_Port));
+	PX_memset(&port,0,sizeof(PX_Sync_Port));
 
 	while (PX_SyncFrameServer_Read(sync_server,&port,&pClient))
 	{
@@ -141,7 +141,7 @@ static px_void PX_SyncFrameServerHandle_StatusProcess(PX_SyncFrame_Server *sync_
 	PX_Sync_IO_Packet *send_packet,*recv_packet;
 	PX_Sync_Port port;
 	px_dword elpased;
-	px_memset(&port,0,sizeof(PX_Sync_Port));
+	PX_memset(&port,0,sizeof(PX_Sync_Port));
 	sync_server->time+=updateelpased;
 
 	do
@@ -257,7 +257,7 @@ static px_void PX_SyncFrameServerHandle_StatusProcess(PX_SyncFrame_Server *sync_
 		
 
 					   send_packet=(PX_Sync_IO_Packet *)(pClient->send_cache_instr_buffer);
-					   px_memset(pClient->send_cache_instr_buffer,0,sizeof(pClient->send_cache_instr_buffer));
+					   PX_memset(pClient->send_cache_instr_buffer,0,sizeof(pClient->send_cache_instr_buffer));
 
 
 					   send_packet->type=PX_SYNC_IO_TYPE_OPCODE;
@@ -276,15 +276,15 @@ static px_void PX_SyncFrameServerHandle_StatusProcess(PX_SyncFrame_Server *sync_
 					   dataoffset=0;
 					   
 					   //stream start-offset 4bytes
-					   px_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),&pClient->timeStreamOffset,sizeof(pClient->timeStreamOffset));
+					   PX_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),&pClient->timeStreamOffset,sizeof(pClient->timeStreamOffset));
 					   reserve_size-=sizeof(pClient->timeStreamOffset);
 					   //stream size 4bytes
-					   px_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),&wstream_size,sizeof(wstream_size));
+					   PX_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),&wstream_size,sizeof(wstream_size));
 					   reserve_size-=sizeof(wstream_size);
 
 					   //Instr stream 
 					   if (wstream_size>reserve_size){wstream_size=reserve_size;}
-					   px_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),sync_server->stampsInstrStream.buffer+pClient->timeStreamOffset,wstream_size);
+					   PX_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),sync_server->stampsInstrStream.buffer+pClient->timeStreamOffset,wstream_size);
 					   datasize+=wstream_size;
 					   reserve_size-=wstream_size;
 
@@ -302,13 +302,13 @@ static px_void PX_SyncFrameServerHandle_StatusProcess(PX_SyncFrame_Server *sync_
 							   if (windexTableSize)
 							   {
 								   //Index start-offset
-								   px_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),&pClient->timeIndexOffset,sizeof(pClient->timeIndexOffset));
+								   PX_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),&pClient->timeIndexOffset,sizeof(pClient->timeIndexOffset));
 								   reserve_size-=sizeof(pClient->timeIndexOffset);
 								   //Index Size
-								   px_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),&windexTableSize,sizeof(windexTableSize));
+								   PX_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),&windexTableSize,sizeof(windexTableSize));
 								   reserve_size-=sizeof(windexTableSize);
 								   //data
-								   px_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),(px_byte *)sync_server->stampsIndexTable.data+pClient->timeIndexOffset*sizeof(PX_SyncFrame_Server_StampIndex),windexTableSize*sizeof(PX_SyncFrame_Server_StampIndex));
+								   PX_memcpy(pClient->send_cache_instr_buffer+(sizeof(sync_server->recv_cache_buffer)-reserve_size),(px_byte *)sync_server->stampsIndexTable.data+pClient->timeIndexOffset*sizeof(PX_SyncFrame_Server_StampIndex),windexTableSize*sizeof(PX_SyncFrame_Server_StampIndex));
 								   reserve_size-=(windexTableSize*sizeof(PX_SyncFrame_Server_StampIndex));
 								   datasize+=(windexTableSize*sizeof(PX_SyncFrame_Server_StampIndex));
 							   }
@@ -388,7 +388,7 @@ px_bool PX_SyncFrameServerAddClient(PX_SyncFrame_Server *sync,px_dword verify_id
 {
 	PX_SyncFrame_Server_Clients client;
 	px_int i;
-	px_memset(client.port.byte_atom,0,sizeof(client.port.byte_atom));
+	PX_memset(client.port.byte_atom,0,sizeof(client.port.byte_atom));
 	client.timeIndexOffset=0;
 	client.timeStreamOffset=0;
 	client.sendDurationTick=PX_SYNC_SERVER_SEND_DURATION;
@@ -437,10 +437,10 @@ static px_bool PX_SyncFrameClient_Read(PX_SyncFrame_Client *client)
 {
 	PX_Sync_Port port;
 	px_bool repeat;
-	px_memset(&port,0,sizeof(PX_Sync_Port));
+	PX_memset(&port,0,sizeof(PX_Sync_Port));
 	while (client->read(client,&port,client->recv_cache_buffer,sizeof(client->recv_cache_buffer),&client->recv_cache_buffer_size))
 	{
-		if (px_memequ(port.byte_atom,client->serverport.byte_atom,sizeof(port.byte_atom)))
+		if (PX_memequ(port.byte_atom,client->serverport.byte_atom,sizeof(port.byte_atom)))
 		{
 			PX_Sync_IO_Packet *packet=(PX_Sync_IO_Packet *)(client->recv_cache_buffer);
 			if (packet->verify_id!=client->verify_id)
@@ -568,7 +568,7 @@ static px_void PX_SyncFrame_ClientHandle_StatusProcess(PX_SyncFrame_Client *clie
 			if((px_uint)client->Input_InstrStream.usedsize<sizeof(client->send_cache_Instr_buffer)- (px_int)PX_STRUCT_OFFSET(PX_Sync_IO_Packet,data))
 			{
 				client->send_cache_Instr_size=client->Input_InstrStream.usedsize+ (px_int)PX_STRUCT_OFFSET(PX_Sync_IO_Packet,data);
-				px_memcpy(send_packet->data,client->Input_InstrStream.buffer,client->Input_InstrStream.usedsize);
+				PX_memcpy(send_packet->data,client->Input_InstrStream.buffer,client->Input_InstrStream.usedsize);
 			}
 			else
 			{
@@ -784,7 +784,7 @@ px_bool PX_SyncDataServerSetSyncData(PX_SyncData_Server *s,px_byte *data,px_dwor
 		return PX_FALSE;
 	}
 
-	px_memcpy(s->data,data,size);
+	PX_memcpy(s->data,data,size);
 	s->CRC32=PX_crc32(data,size);
 	return PX_TRUE;
 }
@@ -816,7 +816,7 @@ px_bool PX_SyncDataServer_WriteBlock(PX_SyncData_Server *s,PX_Sync_Port port,px_
 	}
 	if (s->encode)
 	{
-		px_memcpy(sdata,data,bufferSize);
+		PX_memcpy(sdata,data,bufferSize);
 		s->encode(sdata,bufferSize);
 		if (s->write(s,port,sdata,bufferSize))
 		{
@@ -842,7 +842,7 @@ px_bool PX_SyncDataServerUpdate(PX_SyncData_Server *s,px_int elpased)
 	px_int readSize,i;
 	PX_SyncData_Server_Client *pClient=PX_NULL;
 
-	px_memset(&port,0,sizeof(port));
+	PX_memset(&port,0,sizeof(port));
 
 	if (PX_SyncDataServer_ReadBlock(s,&port,(px_byte *)&R_datagram,sizeof(R_datagram),&readSize))
 	{
@@ -860,13 +860,13 @@ px_bool PX_SyncDataServerUpdate(PX_SyncData_Server *s,px_int elpased)
 					pClient=PX_VECTORAT(PX_SyncData_Server_Client,&s->clients,i);
 					if (pClient->id==R_datagram.query.p_clientid)
 					{
-						if (px_memequ(&pClient->port,&port,sizeof(port)))
+						if (PX_memequ(&pClient->port,&port,sizeof(port)))
 						{
 							pClient->last_request_elpased=0;
 						}
 						else
 						{
-							px_memcpy(&pClient->port,&port,sizeof(port));
+							PX_memcpy(&pClient->port,&port,sizeof(port));
 						}
 						break;
 					}
@@ -893,7 +893,7 @@ px_bool PX_SyncDataServerUpdate(PX_SyncData_Server *s,px_int elpased)
 					{
 						pClient=PX_VECTORAT(PX_SyncData_Server_Client,&s->clients,i);
 
-						if (px_memequ(&pClient->port,&port,sizeof(port)))
+						if (PX_memequ(&pClient->port,&port,sizeof(port)))
 						{
 							int j=0;
 							pClient->last_request_elpased=0;
@@ -964,9 +964,9 @@ px_bool PX_SyncDataServerUpdate(PX_SyncData_Server *s,px_int elpased)
 					
 
 					if(pClient->sendingQueue[pClient->queueindex]!=s->blockCount-1)
-						px_memcpy(W_datagram.data.data,s->data+pClient->sendingQueue[pClient->queueindex]*PX_SYNCDATA_BLOCK_SIZE,PX_SYNCDATA_BLOCK_SIZE);
+						PX_memcpy(W_datagram.data.data,s->data+pClient->sendingQueue[pClient->queueindex]*PX_SYNCDATA_BLOCK_SIZE,PX_SYNCDATA_BLOCK_SIZE);
 					else
-						px_memcpy(W_datagram.data.data,s->data+pClient->sendingQueue[pClient->queueindex]*PX_SYNCDATA_BLOCK_SIZE,s->size-PX_SYNCDATA_BLOCK_SIZE*(s->blockCount-1));
+						PX_memcpy(W_datagram.data.data,s->data+pClient->sendingQueue[pClient->queueindex]*PX_SYNCDATA_BLOCK_SIZE,s->size-PX_SYNCDATA_BLOCK_SIZE*(s->blockCount-1));
 
 					//printf("send block %d\n",trans->sendingQueue[trans->queueindex]);
 					pClient->sendingQueue[pClient->queueindex]=PX_SYNCDATA_INVALID_QUERY_INDEX;
@@ -1054,7 +1054,7 @@ px_bool PX_SyncDataClient_WriteBlock(PX_SyncData_Client *s,PX_Sync_Port port,px_
 	}
 	if (s->encode)
 	{
-		px_memcpy(sdata,data,bufferSize);
+		PX_memcpy(sdata,data,bufferSize);
 		s->encode(sdata,bufferSize);
 		if (s->write(s,port,sdata,bufferSize))
 		{
@@ -1125,7 +1125,7 @@ px_bool PX_SyncDataClientUpdate(PX_SyncData_Client *syncdata_client,px_int elpas
 			syncdata_client->elpased+=elpased;
 		}
 
-		px_memset(&r_port,0,sizeof(r_port));
+		PX_memset(&r_port,0,sizeof(r_port));
 
 		if (PX_SyncDataClient_ReadBlock(syncdata_client,&r_port,(px_byte *)&R_datagram,sizeof(R_datagram),&readSize))
 		{
@@ -1164,7 +1164,7 @@ px_bool PX_SyncDataClientUpdate(PX_SyncData_Client *syncdata_client,px_int elpas
 						//copy data to buffer
 						//printf("accept block %d\n",R_datagram.data.blockIndex);
 						syncdata_client->last_recv_elpased=0;
-						px_memcpy(syncdata_client->data+R_datagram.data.blockIndex*PX_SYNCDATA_BLOCK_SIZE,R_datagram.data.data,PX_SYNCDATA_BLOCK_SIZE);
+						PX_memcpy(syncdata_client->data+R_datagram.data.blockIndex*PX_SYNCDATA_BLOCK_SIZE,R_datagram.data.data,PX_SYNCDATA_BLOCK_SIZE);
 
 						if (syncdata_client->offset<syncdata_client->size)
 						{
@@ -1294,7 +1294,7 @@ px_bool PX_SyncDataServerAddClient(PX_SyncData_Server *syncdata_server,px_dword 
 	PX_SyncData_Server_Client newClient;
 	newClient.id=p_id;
 	newClient.last_request_elpased=0;
-	px_memset(&newClient.port,0,sizeof(newClient.port));
+	PX_memset(&newClient.port,0,sizeof(newClient.port));
 	newClient.queueindex=0;
 	newClient.send_elpased=0;
 	newClient.status=PX_SYNCDATA_CLIENT_STATUS_SYNCHRONIZING;

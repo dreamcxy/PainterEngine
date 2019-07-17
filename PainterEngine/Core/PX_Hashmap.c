@@ -24,7 +24,7 @@ px_map_element * px_rbtree_search(struct px_rb_root *root, char *string)
 		px_map_element *data =(px_map_element *)node;
 		int result;
 
-		result = px_strcmp(string, data->string);
+		result = PX_strcmp(string, data->string);
 
 		if (result < 0)
 			node = node->rb_left;
@@ -43,7 +43,7 @@ px_bool px_rbtree_insert(struct px_rb_root *root, px_map_element *data)
 	/* Figure out where to put new node */
 	while (*newnode) {
 		px_map_element *__this = (px_map_element *)(*newnode);
-		int result = px_strcmp(data->string, __this->string);
+		int result = PX_strcmp(data->string, __this->string);
 
 		parent = *newnode;
 		if (result < 0)
@@ -67,7 +67,7 @@ PX_HASHMAP_RETURN PX_MapPut(px_map * m,px_char *stringkey, px_void * value)
 {
 	px_map_element *newnode = (px_map_element *)MP_Malloc(m->mp,sizeof(px_map_element));
 	newnode->Ptr=value;
-	px_strcpy(newnode->string,stringkey,sizeof(newnode->string));
+	PX_strcpy(newnode->string,stringkey,sizeof(newnode->string));
 	if(px_rbtree_insert(&m->root,newnode))
 	{
 		m->size++;
@@ -81,7 +81,7 @@ PX_HASHMAP_RETURN PX_MapPutInt(px_map * m,px_char *stringkey, px_int value)
 {
 	px_map_element *newnode = (px_map_element *)MP_Malloc(m->mp,sizeof(px_map_element));
 	newnode->_int=value;
-	px_strcpy(newnode->string,stringkey,sizeof(newnode->string));
+	PX_strcpy(newnode->string,stringkey,sizeof(newnode->string));
 	if(px_rbtree_insert(&m->root,newnode))
 	{
 		m->size++;
@@ -95,7 +95,7 @@ PX_HASHMAP_RETURN PX_MapPutFloat(px_map * m,px_char *stringkey, px_float value)
 {
 	px_map_element *newnode = (px_map_element *)MP_Malloc(m->mp,sizeof(px_map_element));
 	newnode->_float=value;
-	px_strcpy(newnode->string,stringkey,sizeof(newnode->string));
+	PX_strcpy(newnode->string,stringkey,sizeof(newnode->string));
 	if(px_rbtree_insert(&m->root,newnode))
 	{
 		m->size++;

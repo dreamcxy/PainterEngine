@@ -80,7 +80,7 @@ px_bool PX_ParticalLauncherCreateEx(PX_Partical_Launcher *env,px_memorypool *mp,
 	env->UpdateParitcalFuncIndex=-1;
 
 	env->ParticalPool=(PX_Partical_Atom *)MP_Malloc(mp,sizeof(PX_Partical_Atom)*env->maxCount);
-	px_memset(env->ParticalPool,0,sizeof(PX_Partical_Atom)*env->maxCount);
+	PX_memset(env->ParticalPool,0,sizeof(PX_Partical_Atom)*env->maxCount);
 	return PX_TRUE;
 }
 
@@ -147,7 +147,7 @@ px_bool PX_ParticalLauncherCreate(PX_Partical_Launcher *env,px_memorypool *mp,px
  	env->UpdateParitcalFuncIndex=PX_ScriptVM_GetFunctionIndex(env->VM_Instance,_updatefunc);
 
 	env->ParticalPool=(PX_Partical_Atom *)MP_Malloc(mp,sizeof(PX_Partical_Atom)*env->maxCount);
-	px_memset(env->ParticalPool,0,sizeof(PX_Partical_Atom)*env->maxCount);
+	PX_memset(env->ParticalPool,0,sizeof(PX_Partical_Atom)*env->maxCount);
 
 	PX_ScriptVM_RegistryHostFunction(env->VM_Instance,"PARTICAL_RAND",PX_Partical_Rand);
 

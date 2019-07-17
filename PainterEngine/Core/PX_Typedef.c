@@ -206,9 +206,9 @@ px_int  PX_ftoa(px_float f, char *outbuf, px_int maxlen, px_int precision)
 
 	while (PX_TRUE)
 	{
-		if (px_strlen(outbuf)>2&&outbuf[px_strlen(outbuf)-1]=='0'&&outbuf[px_strlen(outbuf)-2]!='.')
+		if (PX_strlen(outbuf)>2&&outbuf[PX_strlen(outbuf)-1]=='0'&&outbuf[PX_strlen(outbuf)-2]!='.')
 		{
-			outbuf[px_strlen(outbuf)-1]='\0';
+			outbuf[PX_strlen(outbuf)-1]='\0';
 			ret--;
 		}
 		else{break;}
@@ -419,7 +419,7 @@ px_stringformat PX_STRINGFORMAT_STRING(const px_char *_s)
 }
 
 
-px_int px_sprintf8(px_char *_out_str,px_int str_size,px_char fmt[], px_stringformat _1, px_stringformat _2, px_stringformat _3, px_stringformat _4,px_stringformat _5, px_stringformat _6, px_stringformat _7, px_stringformat _8)
+px_int PX_sprintf8(px_char *_out_str,px_int str_size,px_char fmt[], px_stringformat _1, px_stringformat _2, px_stringformat _3, px_stringformat _4,px_stringformat _5, px_stringformat _6, px_stringformat _7, px_stringformat _8)
 {
 	px_int length=0;
 	px_char *p=PX_NULL;
@@ -450,13 +450,13 @@ px_int px_sprintf8(px_char *_out_str,px_int str_size,px_char fmt[], px_stringfor
 			switch (pstringfmt.type)
 			{
 			case PX_STRINGFORMAT_TYPE_INT:
-				length+=px_strlen(PX_itos(pstringfmt._int,10).data);
+				length+=PX_strlen(PX_itos(pstringfmt._int,10).data);
 				break;
 			case PX_STRINGFORMAT_TYPE_FLOAT:
-				length+=px_strlen(PX_ftos(pstringfmt._float,3).data);
+				length+=PX_strlen(PX_ftos(pstringfmt._float,3).data);
 				break;
 			case PX_STRINGFORMAT_TYPE_STRING:
-				length+=px_strlen(pstringfmt._pstring);
+				length+=PX_strlen(pstringfmt._pstring);
 				break;
 			default:
 				return 0;
@@ -465,7 +465,7 @@ px_int px_sprintf8(px_char *_out_str,px_int str_size,px_char fmt[], px_stringfor
 		}
 		return length;
 	}
-	px_memset(_out_str,0,str_size);
+	PX_memset(_out_str,0,str_size);
 	for (p = fmt;*p; p++) 
 	{
 		if(*p != '%') {
@@ -493,29 +493,29 @@ px_int px_sprintf8(px_char *_out_str,px_int str_size,px_char fmt[], px_stringfor
 		{
 		case PX_STRINGFORMAT_TYPE_INT:
 			tret=PX_itos(pstringfmt._int,10);
-			if(length+px_strlen(tret.data)<str_size)
+			if(length+PX_strlen(tret.data)<str_size)
 			{
-				px_strcat(_out_str,tret.data);
-				length+=px_strlen(tret.data);
+				PX_strcat(_out_str,tret.data);
+				length+=PX_strlen(tret.data);
 			}
 			else
 				return length;
 			break;
 		case PX_STRINGFORMAT_TYPE_FLOAT:
 			tret=PX_ftos(pstringfmt._float,3);
-			if(length+px_strlen(tret.data)<str_size)
+			if(length+PX_strlen(tret.data)<str_size)
 			{
-				px_strcat(_out_str,tret.data);
-				length+=px_strlen(tret.data);
+				PX_strcat(_out_str,tret.data);
+				length+=PX_strlen(tret.data);
 			}
 			else
 				return length;
 			break;
 		case PX_STRINGFORMAT_TYPE_STRING:
-			if(length+px_strlen(pstringfmt._pstring)<str_size)
+			if(length+PX_strlen(pstringfmt._pstring)<str_size)
 			{
-				px_strcat(_out_str,pstringfmt._pstring);
-				length+=px_strlen(pstringfmt._pstring);
+				PX_strcat(_out_str,pstringfmt._pstring);
+				length+=PX_strlen(pstringfmt._pstring);
 			}
 			else
 				return length;
@@ -529,45 +529,45 @@ px_int px_sprintf8(px_char *_out_str,px_int str_size,px_char fmt[], px_stringfor
 }
 
 
-px_int px_sprintf7(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3,px_stringformat _4,px_stringformat _5,px_stringformat _6,px_stringformat _7)
+px_int PX_sprintf7(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3,px_stringformat _4,px_stringformat _5,px_stringformat _6,px_stringformat _7)
 {
-	return px_sprintf8(str,str_size,fmt,_1,_2,_3,_4,_5,_6,_7,PX_STRINGFORMAT_INT(0));
+	return PX_sprintf8(str,str_size,fmt,_1,_2,_3,_4,_5,_6,_7,PX_STRINGFORMAT_INT(0));
 }
 
 
-px_int px_sprintf6(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3,px_stringformat _4,px_stringformat _5,px_stringformat _6)
+px_int PX_sprintf6(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3,px_stringformat _4,px_stringformat _5,px_stringformat _6)
 {
-	return px_sprintf8(str,str_size,fmt,_1,_2,_3,_4,_5,_6,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
+	return PX_sprintf8(str,str_size,fmt,_1,_2,_3,_4,_5,_6,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
 }
 
 
-px_int px_sprintf5(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3,px_stringformat _4,px_stringformat _5)
+px_int PX_sprintf5(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3,px_stringformat _4,px_stringformat _5)
 {
-	return px_sprintf8(str,str_size,fmt,_1,_2,_3,_4,_5,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
+	return PX_sprintf8(str,str_size,fmt,_1,_2,_3,_4,_5,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
 }
 
 
-px_int px_sprintf4(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3,px_stringformat _4)
+px_int PX_sprintf4(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3,px_stringformat _4)
 {
-	return px_sprintf8(str,str_size,fmt,_1,_2,_3,_4,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
+	return PX_sprintf8(str,str_size,fmt,_1,_2,_3,_4,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
 }
 
 
-px_int px_sprintf3(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3)
+px_int PX_sprintf3(px_char *str,px_int str_size,px_char fmt[],px_stringformat _1,px_stringformat _2,px_stringformat _3)
 {
-	return px_sprintf8(str,str_size,fmt,_1,_2,_3,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
+	return PX_sprintf8(str,str_size,fmt,_1,_2,_3,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
 }
 
 
-px_int px_sprintf2(px_char *str,px_int str_size,px_char fmt[], px_stringformat _1,px_stringformat _2)
+px_int PX_sprintf2(px_char *str,px_int str_size,px_char fmt[], px_stringformat _1,px_stringformat _2)
 {
-	return px_sprintf8(str,str_size,fmt,_1,_2,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
+	return PX_sprintf8(str,str_size,fmt,_1,_2,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
 }
 
 
-px_int px_sprintf1(px_char *str,px_int str_size,px_char fmt[], px_stringformat _1)
+px_int PX_sprintf1(px_char *str,px_int str_size,px_char fmt[], px_stringformat _1)
 {
-	return px_sprintf8(str,str_size,fmt,_1,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
+	return PX_sprintf8(str,str_size,fmt,_1,PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0),PX_STRINGFORMAT_INT(0));
 }
 
 void PX_MatrixZero(px_matrix *Mat)
@@ -1093,7 +1093,7 @@ px_bool PX_isXYInRegion(px_float x,px_float y,px_float rectx,px_float recty,px_f
 }
 
 
-void px_memset(void *dst,px_byte byte,px_uint size)
+void PX_memset(void *dst,px_byte byte,px_int size)
 {
 	px_dword dw=byte?(byte<<24)|(byte<<16)|(byte<<8)|byte:0;
 	px_dword *_4byteMovDst=(px_dword *)dst;
@@ -1109,14 +1109,14 @@ void px_memset(void *dst,px_byte byte,px_uint size)
 }
 
 
-void px_memdwordset(void *dst,px_dword dw,px_uint count)
+void PX_memdwordset(void *dst,px_dword dw,px_int count)
 {
 	px_dword *p=(px_dword *)dst;
 	while(count--)*p++=dw;
 }
 
 
-px_bool px_memequ(const void *dst,const void *src,px_uint size)
+px_bool PX_memequ(const void *dst,const void *src,px_int size)
 {
 	px_dword *_4byteMovSrc=(px_dword *)src;
 	px_dword *_4byteMovDst=(px_dword *)dst;
@@ -1141,7 +1141,7 @@ px_bool px_memequ(const void *dst,const void *src,px_uint size)
 }
 
 
-px_void px_memcpy(px_void *dst,const px_void *src,px_uint size)
+px_void PX_memcpy(px_void *dst,const px_void *src,px_int size)
 {
 	typedef struct
 	{
@@ -1366,7 +1366,7 @@ px_void px_memcpy(px_void *dst,const px_void *src,px_uint size)
 
 
 
-px_void px_strcpy(px_char *dst,const px_char *src,px_uint size)
+px_void PX_strcpy(px_char *dst,const px_char *src,px_int size)
 {
 	while(size--)
 		if(*src)
@@ -1379,23 +1379,23 @@ px_void px_strcpy(px_char *dst,const px_char *src,px_uint size)
 	*(dst-1)='\0';
 }
 
-px_void px_strcat(px_char *src,const px_char *cat)
+px_void PX_strcat(px_char *src,const px_char *cat)
 {
-	px_int len=px_strlen(cat);
+	px_int len=PX_strlen(cat);
 	while(*src)src++;
 	while(len--)*src++=*cat++;
 	*src='\0';
 }
 
 
-px_void px_strset(px_char *dst,const px_char*src)
+px_void PX_strset(px_char *dst,const px_char*src)
 {
 	dst[0]=0;
-	px_strcat(dst,src);
+	PX_strcat(dst,src);
 }
 
 
-px_int px_strlen(const px_char *dst)
+px_int PX_strlen(const px_char *dst)
 {
 	px_int len=0;
 	if(!dst)
@@ -1407,7 +1407,7 @@ px_int px_strlen(const px_char *dst)
 	return len-1;
 }
 
-px_void px_strupr(px_char *src)
+px_void PX_strupr(px_char *src)
 {
 	while (*src != '\0')  
     {  
@@ -1417,7 +1417,7 @@ px_void px_strupr(px_char *src)
     }  
 }
 
-px_void px_strlwr(px_char *src)
+px_void PX_strlwr(px_char *src)
 {
 	 while (*src != '\0')  
     {  
@@ -1564,7 +1564,7 @@ void FFT_Base2(_IN _OUT px_complex x[],px_int N)
 }
 void PX_FFT(_IN px_complex x[],_OUT px_complex X[],px_int N)
 {
-	px_memcpy(X,x,sizeof(px_complex)*N);
+	PX_memcpy(X,x,sizeof(px_complex)*N);
 	FFT_Base2(X,N);
 }
 
@@ -1625,7 +1625,7 @@ void IFFT_Base2(_IN _OUT px_complex X[],px_int N)
 void PX_IFFT(_IN px_complex X[],_OUT px_complex x[],px_int N)
 {
 	px_int i;
-	px_memcpy(X,x,sizeof(px_complex)*N);
+	PX_memcpy(X,x,sizeof(px_complex)*N);
 	IFFT_Base2(X,N);
 	// 1/N operate
 	for (i=0;i<N;i++)
@@ -1715,7 +1715,7 @@ void PX_FFT_2_Shift(_IN px_complex _in[],_OUT px_complex _out[],px_int N)
 	px_int x,y;
 	px_complex *_t=_out;
 	px_complex _ext;
-	px_memcpy(_t,_in,sizeof(px_complex)*N*N);
+	PX_memcpy(_t,_in,sizeof(px_complex)*N*N);
 
 	for (y=0;y<N/2;y++)
 	{
@@ -1747,7 +1747,7 @@ px_point PX_POINT(px_float x,px_float y,px_float z)
 	return p;
 }
 
-px_bool px_strequ(px_char *src,px_char *dst)
+px_bool PX_strequ(const px_char *src,const px_char *dst)
 {
 	px_int ret = 0;  
 	while(!(ret=*(px_uchar*)src-*(px_uchar*)dst) && *src)  
@@ -1759,7 +1759,7 @@ px_bool px_strequ(px_char *src,px_char *dst)
 }
 
 
-px_bool px_strIsNumeric(px_char *str)
+px_bool PX_strIsNumeric(const px_char *str)
 {
 	px_bool Dot=PX_FALSE;
 	px_int CurrentCharIndex;
@@ -1768,16 +1768,16 @@ px_bool px_strIsNumeric(px_char *str)
 	{
 		return PX_FALSE;
 	}
-	if (!px_charIsNumeric(str[0])&&!(str[0]==('-')))
+	if (!PX_charIsNumeric(str[0])&&!(str[0]==('-')))
 	{
 		if(str[0]!='.')
 			return PX_FALSE;
 	}
 	for (CurrentCharIndex=1;
-		CurrentCharIndex<px_strlen(str);
+		CurrentCharIndex<PX_strlen(str);
 		CurrentCharIndex++)
 	{
-		if (!px_charIsNumeric(str[CurrentCharIndex]))
+		if (!PX_charIsNumeric(str[CurrentCharIndex]))
 		{
 			if (str[CurrentCharIndex]=='e'&&(str[CurrentCharIndex+1]=='+'||str[CurrentCharIndex+1]=='-'))
 			{
@@ -1803,7 +1803,7 @@ px_bool px_strIsNumeric(px_char *str)
 	return PX_TRUE;
 }
 
-px_bool px_strIsFloat(px_char *str)
+px_bool PX_strIsFloat(const px_char *str)
 {
 	px_bool Dot=PX_FALSE;
 	px_int CurrentCharIndex;
@@ -1811,16 +1811,16 @@ px_bool px_strIsFloat(px_char *str)
 	{
 		return PX_FALSE;
 	}
-	if (!px_charIsNumeric(str[0])&&!(str[0]==('-')))
+	if (!PX_charIsNumeric(str[0])&&!(str[0]==('-')))
 	{
 		if(str[0]!='.')
 			return PX_FALSE;
 	}
 	for (CurrentCharIndex=1;
-		CurrentCharIndex<px_strlen(str);
+		CurrentCharIndex<PX_strlen(str);
 		CurrentCharIndex++)
 	{
-		if (!px_charIsNumeric(str[CurrentCharIndex]))
+		if (!PX_charIsNumeric(str[CurrentCharIndex]))
 		{
 			if (str[CurrentCharIndex]=='e'&&(str[CurrentCharIndex+1]=='+'||str[CurrentCharIndex+1]=='-'))
 			{
@@ -1846,7 +1846,7 @@ px_bool px_strIsFloat(px_char *str)
 	return Dot? PX_TRUE:PX_FALSE;
 }
 
-px_bool px_charIsNumeric(px_char chr)
+px_bool PX_charIsNumeric(px_char chr)
 {
 	if (chr>=('0')&&chr<=('9'))
 	{
@@ -1855,11 +1855,11 @@ px_bool px_charIsNumeric(px_char chr)
 	return PX_FALSE;
 }
 
-px_bool px_strIsInt(px_char *str)
+px_bool PX_strIsInt(const px_char *str)
 {
-	if (px_strIsNumeric(str))
+	if (PX_strIsNumeric(str))
 	{
-		if (px_strIsFloat(str))
+		if (PX_strIsFloat(str))
 		{
 			return PX_FALSE;
 		}
@@ -2084,7 +2084,7 @@ px_char *PX_strchr(const char *s,int ch)
 	return PX_NULL;
 }
 
-px_int px_strcmp(const px_char *str1, const px_char *str2)
+px_int PX_strcmp(const px_char *str1, const px_char *str2)
 {
 	int ret=0;
 	while( !(ret = *(px_uchar*)str1 - *(px_uchar*)str2 ) && *str1 )
@@ -2095,7 +2095,7 @@ px_int px_strcmp(const px_char *str1, const px_char *str2)
 	return ret;   
 }
 
-px_char* px_strstr(const char* dest, const char* src)
+px_char* PX_strstr(const char* dest, const char* src)
 {
 	px_char* start = (px_char*)dest;
 	px_char* substart = (px_char*)src;
@@ -2142,33 +2142,33 @@ px_char* PX_inet_ntoa(px_dword ipv4)
 	b[2]=((ipv4 & 0x0000ff00)>>8);
 	b[3]=((ipv4 & 0x000000ff)>>0);
 
-	PX_itoa(b[3],a+px_strlen(a),5,10);
-	px_strcat(a,".");
-	PX_itoa(b[2],a+px_strlen(a),5,10);
-	px_strcat(a,".");
-	PX_itoa(b[1],a+px_strlen(a),5,10);
-	px_strcat(a,".");
-	PX_itoa(b[0],a+px_strlen(a),5,10);
+	PX_itoa(b[3],a+PX_strlen(a),5,10);
+	PX_strcat(a,".");
+	PX_itoa(b[2],a+PX_strlen(a),5,10);
+	PX_strcat(a,".");
+	PX_itoa(b[1],a+PX_strlen(a),5,10);
+	PX_strcat(a,".");
+	PX_itoa(b[0],a+PX_strlen(a),5,10);
 	return a;
 }
 
-px_dword px_htonl(px_dword h)
+px_dword PX_htonl(px_dword h)
 {
 	return PX_checkCPUendian() ? h : BigLittleSwap32(h);
 }
 
 
-px_dword px_ntohl(px_dword n)
+px_dword PX_ntohl(px_dword n)
 {
 	return PX_checkCPUendian() ? n : BigLittleSwap32(n);
 }
 
-px_word  px_htons(px_word h)
+px_word  PX_htons(px_word h)
 {
 	return PX_checkCPUendian() ? h : BigLittleSwap16(h);
 }
 
-px_word px_ntohs(px_word n)
+px_word PX_ntohs(px_word n)
 {
 	return PX_checkCPUendian() ? n : BigLittleSwap16(n);
 }

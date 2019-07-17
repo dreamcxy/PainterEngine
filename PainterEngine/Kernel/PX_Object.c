@@ -80,7 +80,7 @@ PX_Object * PX_ObjectCreateEx(px_memorypool *mp,PX_Object *Parent,px_float x,px_
 			MP_Free(mp,pObject);
 			return PX_NULL;
 		}
-		px_memcpy(pObject->pObject,desc,size);
+		PX_memcpy(pObject->pObject,desc,size);
 		pObject->Type=type;
 		pObject->Func_ObjectFree=Func_ObjectFree;
 		pObject->Func_ObjectRender=Func_ObjectRender;
@@ -537,7 +537,7 @@ PX_Object* PX_Object_LabelCreate(px_memorypool *mp,PX_Object *Parent,px_int x,px
 	pObject->Func_ObjectFree=PX_Object_LabelFree;
 	pObject->Func_ObjectRender=PX_Object_LabelRender;
 
-	TextLen=px_strlen(Text);
+	TextLen=PX_strlen(Text);
 	
 	pLable->Text=(px_char *)MP_Malloc(mp,TextLen+1);
 	if (pLable->Text==PX_NULL)
@@ -547,7 +547,7 @@ PX_Object* PX_Object_LabelCreate(px_memorypool *mp,PX_Object *Parent,px_int x,px
 		return PX_NULL;
 	}
 
-	px_strcpy(pLable->Text,Text,TextLen+1);
+	PX_strcpy(pLable->Text,Text,TextLen+1);
 
 	pLable->TextColor=Color;
 	pLable->BackgroundColor=PX_COLOR(0,0,0,0);
@@ -588,9 +588,9 @@ px_void PX_Object_LabelSetText( PX_Object *pObject,px_char *Text )
 		return;
 	}
 	
-	TextLen=px_strlen(Text);
+	TextLen=PX_strlen(Text);
 	pLabel=(PX_Object_Label *)pObject->pObject;
-	if(TextLen>px_strlen(pLabel->Text))
+	if(TextLen>PX_strlen(pLabel->Text))
 	{
 	MP_Free(pObject->mp,pLabel->Text);
 	pLabel->Text=(px_char *)MP_Malloc(pObject->mp,TextLen+1);
@@ -598,11 +598,11 @@ px_void PX_Object_LabelSetText( PX_Object *pObject,px_char *Text )
 		{
 			PX_ERROR("Text create out of memories");
 		}
-	px_strcpy(pLabel->Text,Text,TextLen+1);
+	PX_strcpy(pLabel->Text,Text,TextLen+1);
 	}
 	else
 	{
-		px_strcpy(pLabel->Text,Text,TextLen+1);
+		PX_strcpy(pLabel->Text,Text,TextLen+1);
 	}
 }
 
@@ -659,7 +659,7 @@ px_void PX_Object_LabelRender(px_surface *psurface, PX_Object *pObject,px_uint e
 	}
 
 	TextLen=0;
-	for (i=0;i<px_strlen(pLabel->Text);i++)
+	for (i=0;i<PX_strlen(pLabel->Text);i++)
 	{
 		if (pLabel->Text[i]&0x80)
 		{
@@ -1786,7 +1786,7 @@ PX_Object * PX_Object_PushButtonCreate(px_memorypool *mp,PX_Object *Parent,px_in
 	pObject->Func_ObjectFree=PX_Object_PushButtonFree;
 	pObject->Func_ObjectRender=PX_Object_PushButtonRender;
 
-	TextLen=px_strlen(Text)+1;
+	TextLen=PX_strlen(Text)+1;
 
 	pPushButton->Text=(px_char *)MP_Malloc(mp,TextLen);
 	
@@ -1797,7 +1797,7 @@ PX_Object * PX_Object_PushButtonCreate(px_memorypool *mp,PX_Object *Parent,px_in
 		return PX_NULL;
 	}
 
-	px_strcpy(pPushButton->Text,Text,TextLen);
+	PX_strcpy(pPushButton->Text,Text,TextLen);
 
 	pPushButton->TextColor=Color;
 	pPushButton->CursorColor=PX_COLOR(255,192,192,192);
@@ -1851,10 +1851,10 @@ px_void PX_Object_PushButtonSetText( PX_Object *pObject,px_char *Text )
 		return;
 	}
 	
-	TextLen=px_strlen(Text);
+	TextLen=PX_strlen(Text);
 	pPushButton=(PX_Object_PushButton *)pObject->pObject;
 
-	if (TextLen>px_strlen(pPushButton->Text))
+	if (TextLen>PX_strlen(pPushButton->Text))
 	{
 		MP_Free(pObject->mp,pPushButton->Text);
 
@@ -1864,7 +1864,7 @@ px_void PX_Object_PushButtonSetText( PX_Object *pObject,px_char *Text )
 			return;
 		}
 	}
-	px_strcpy(pPushButton->Text,Text,TextLen+1);
+	PX_strcpy(pPushButton->Text,Text,TextLen+1);
 	
 }
 
@@ -1976,7 +1976,7 @@ px_void PX_Object_PushButtonRender(px_surface *psurface, PX_Object *pObject,px_u
 	}
 
 	TextLen=0;
-	for (i=0;i<px_strlen(pPushButton->Text);i++)
+	for (i=0;i<PX_strlen(pPushButton->Text);i++)
 	{
 		if (pPushButton->Text[i]&0x80)
 		{
@@ -2227,9 +2227,9 @@ static px_void PX_Object_EditCheckCursor(PX_Object_Edit*pedit)
 	{
 		pedit->cursor_index=0;
 	}
-	if (pedit->cursor_index>px_strlen(pedit->text.buffer))
+	if (pedit->cursor_index>PX_strlen(pedit->text.buffer))
 	{
-		pedit->cursor_index=px_strlen(pedit->text.buffer);
+		pedit->cursor_index=PX_strlen(pedit->text.buffer);
 	}
 }
 
@@ -2335,7 +2335,7 @@ px_void PX_Object_EditSetText( PX_Object *pObject,px_char *Text )
 	{
 		PX_StringClear(&pEdit->text);
 		PX_StringCat(&pEdit->text,Text);
-		pEdit->cursor_index=px_strlen(Text);
+		pEdit->cursor_index=PX_strlen(Text);
 	}
 }
 
@@ -2423,7 +2423,7 @@ px_void PX_Object_EditUpdateCursorOnDown(PX_Object *pObject,px_int cx,px_int cy)
 	cx+=pEdit->XOffset;
 	cy+=pEdit->YOffset;
 
-	textLen=px_strlen(pEdit->text.buffer);
+	textLen=PX_strlen(pEdit->text.buffer);
 
 	for (charIndex=0;charIndex<textLen;charIndex++)
 	{
@@ -2534,7 +2534,7 @@ px_void PX_Object_EditUpdateCursorViewRegion(PX_Object *pObject)
 	x=pEdit->HorizontalOffset;
 	y=pEdit->VerticalOffset;
 
-	textLen=px_strlen(pEdit->text.buffer);
+	textLen=PX_strlen(pEdit->text.buffer);
 
 	for (charIndex=0;charIndex<textLen;charIndex++)
 	{
@@ -2633,7 +2633,7 @@ px_void PX_Object_EditRender(px_surface *psurface, PX_Object *pObject,px_uint el
 	x=pEdit->HorizontalOffset;
 	y=pEdit->VerticalOffset;
 
-	textLen=px_strlen(pEdit->text.buffer);
+	textLen=PX_strlen(pEdit->text.buffer);
 
 	
 
@@ -3256,7 +3256,7 @@ px_void PX_Object_AutoTextRender(px_surface *psurface, PX_Object *pObject,px_uin
 	{
 		return;
 	}
-	for (i=0;i<px_strlen(pAt->text.buffer);i++)
+	for (i=0;i<PX_strlen(pAt->text.buffer);i++)
 	{
 		if (pAt->text.buffer[i]=='\n')
 		{
@@ -3323,7 +3323,7 @@ px_int PX_Object_AutoTextGetHeight(PX_Object *pObject)
 	{
 		return 0;
 	}
-	for (i=0;i<px_strlen(pAt->text.buffer);i++)
+	for (i=0;i<PX_strlen(pAt->text.buffer);i++)
 	{
 		if (pAt->text.buffer[i]=='\n')
 		{

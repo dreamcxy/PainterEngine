@@ -224,7 +224,7 @@ px_void PX_BpNeuralsTraining(PX_BpNeurals *bpN,px_double *expect)
 
 px_void PX_BpNeuralsTrain(PX_BpNeurals *bpN,px_double *input,px_double *expect)
 {
-	px_memcpy(bpN->input,input,bpN->inputCount*sizeof(px_double));
+	PX_memcpy(bpN->input,input,bpN->inputCount*sizeof(px_double));
 	PX_BpNeuralsTraining(bpN,expect);
 }
 
@@ -232,7 +232,7 @@ px_void PX_BpNeuralsForward(PX_BpNeurals *bpN,px_double *input,px_double *output
 {
 	px_int i,j;
 
-	px_memcpy(bpN->input,input,bpN->inputCount*sizeof(px_double));
+	PX_memcpy(bpN->input,input,bpN->inputCount*sizeof(px_double));
 
 	for (i=0;i<bpN->hiddenCount;i++)
 	{
@@ -288,7 +288,7 @@ px_void PX_BpNeuralsForward(PX_BpNeurals *bpN,px_double *input,px_double *output
 		}
 	}
 
-	px_memcpy(output,bpN->output,sizeof(px_double)*bpN->outputCount);
+	PX_memcpy(output,bpN->output,sizeof(px_double)*bpN->outputCount);
 }
 
 px_void PX_BpNeuralsFree(PX_BpNeurals *bpN)

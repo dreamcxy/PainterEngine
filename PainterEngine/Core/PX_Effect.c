@@ -40,7 +40,7 @@ px_bool PX_EffectShine(px_surface *s,px_int radius,px_color color,px_float inten
 			PX_SurfaceSetPixel(&ns,x,y,PX_SurfaceGetPixel(s,x,y));
 		}
 	}
-	px_memcpy(s->surfaceBuffer,ns.surfaceBuffer,s->width*s->height*sizeof(px_color));
+	PX_memcpy(s->surfaceBuffer,ns.surfaceBuffer,s->width*s->height*sizeof(px_color));
 	PX_SurfaceFree(&ns);
 	return PX_TRUE;
 }
@@ -83,7 +83,7 @@ px_bool PX_EffectOutline(px_surface *s,px_int radius,px_color color)
 			}
 
 		}
-		px_memcpy(s->surfaceBuffer,ns.surfaceBuffer,s->width*s->height*sizeof(px_color));
+		PX_memcpy(s->surfaceBuffer,ns.surfaceBuffer,s->width*s->height*sizeof(px_color));
 		PX_SurfaceFree(&ns);
 		return PX_TRUE;
 }

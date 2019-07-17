@@ -89,8 +89,8 @@ px_bool PX_TRawBuild(px_surface *psurface,px_byte *TRawBuffer,px_int *size)
 
 	if (TRawBuffer)
 	{
-		px_memcpy(TRawBuffer,&header,sizeof(header));
-		px_memcpy(TRawBuffer+sizeof(header),psurface->surfaceBuffer,psurface->height*psurface->width*sizeof(px_color));
+		PX_memcpy(TRawBuffer,&header,sizeof(header));
+		PX_memcpy(TRawBuffer+sizeof(header),psurface->surfaceBuffer,psurface->height*psurface->width*sizeof(px_color));
 		return PX_TRUE;
 	}
 	else

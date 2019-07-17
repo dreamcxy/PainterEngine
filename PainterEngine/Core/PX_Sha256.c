@@ -203,7 +203,7 @@ void
         else
         {
            n = MIN( BufferSize, (BLOCK_SIZE - Context->curlen) );
-           px_memcpy( Context->buf + Context->curlen, (px_void *)Buffer, (px_int)n );
+           PX_memcpy( Context->buf + Context->curlen, (px_void *)Buffer, (px_int)n );
            Context->curlen += n;
            Buffer = (px_uchar*)Buffer + n;
            BufferSize -= n;
@@ -307,5 +307,5 @@ void PX_Sha256CalculateHashString(px_void *buffer,px_uint32 bufferSize,px_char s
 		}
 	}
 	hash.bytes[31]=0;
-	px_memcpy(stringKey,hash.bytes,sizeof(hash.bytes));
+	PX_memcpy(stringKey,hash.bytes,sizeof(hash.bytes));
 }
