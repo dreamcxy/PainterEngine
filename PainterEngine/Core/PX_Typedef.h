@@ -208,7 +208,7 @@ px_bool PX_memequ(const void *dst,const void *src,px_int size);
 px_void PX_memcpy(px_void *dst,const px_void *src,px_int size);
 px_void PX_strcpy(px_char *dst,const px_char *src,px_int size);
 px_void PX_strcat(px_char *src,const px_char *cat);
-px_void PX_strset(px_void *dst,const px_void *src);
+px_void PX_strset(px_char *dst,const px_char *src);
 px_int PX_strlen(const px_char *dst);
 px_int PX_strcmp(const px_char *str1, const px_char *str2);
 px_bool PX_strequ(const px_char *src,const char *dst);
