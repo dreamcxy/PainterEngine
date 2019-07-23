@@ -51,9 +51,16 @@ typedef     unsigned long long  px_qword;
 typedef     unsigned long long  px_uint64;//typedef     uint64_t			px_uint64;
 typedef     long long           px_int64;//typedef      int64_t				px_int64;
 
+
+
 typedef struct
 {
-	px_char data[128];
+	union
+	{
+		px_char data[256];
+		px_word wdata[128];
+	};
+	
 }PX_RETURN_STRING;
 
 #include	"PX_Log.h"
@@ -174,6 +181,7 @@ px_int  PX_atoi(px_char str[]);
 px_float PX_atof(px_char fstr[]);
 PX_RETURN_STRING PX_ftos(float f, int precision);
 PX_RETURN_STRING PX_itos(px_int num,px_int radix);
+px_void PX_AscToWord(const px_char *asc,px_word *u16);
 px_int PX_ftoa(float f, char *outbuf, int maxlen, int precision);
 px_int PX_itoa(px_int num,px_char *str,px_int MaxStrSize,px_int radix);
 px_char *PX_strchr(const char *s,int ch);
@@ -217,6 +225,7 @@ typedef enum
 	PX_STRINGFORMAT_TYPE_FLOAT,
 	PX_STRINGFORMAT_TYPE_STRING,
 }PX_STRINGFORMAT_TYPE;
+
 typedef struct
 {
 	PX_STRINGFORMAT_TYPE type;

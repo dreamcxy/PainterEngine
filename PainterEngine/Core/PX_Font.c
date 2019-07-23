@@ -20810,6 +20810,7 @@ px_void PX_FontModuleDrawText(px_surface *psurface,int x,int y,px_uchar *Text,px
 	case PX_FONT_ALIGN_XCENTER:
 		{
 			dx=0;
+			dy=0;
 			while (PX_TRUE)
 			{
 				px_dword unicode_code=0;
@@ -20840,13 +20841,17 @@ px_void PX_FontModuleDrawText(px_surface *psurface,int x,int y,px_uchar *Text,px
 						dx+=mod->xspacer;
 					}
 				}
-				else if (unicode_code!='\n')
+				else 
 				{
-					dx=x;
-				}
-				else
-				{
-					dx+=mod->yspacer;
+					if (unicode_code==' ')
+					{
+						dx+=mod->xspacer;
+					}
+					if (unicode_code=='\n')
+					{
+						dy+=mod->yspacer;
+						dx=x;
+					}
 				}
 			}
 			if(align==PX_FONT_ALIGN_XCENTER) x-=dx/2;
@@ -20894,15 +20899,19 @@ px_void PX_FontModuleDrawText(px_surface *psurface,int x,int y,px_uchar *Text,px
 				dx+=mod->xspacer;
 			}
 		}
-		else if (unicode_code!='\n')
+		else 
 		{
-			dy+=mod->yspacer;
-			dx=x;
+			if (unicode_code==' ')
+			{
+				dx+=mod->xspacer;
+			}
+			if (unicode_code=='\n')
+			{
+				dy+=mod->yspacer;
+				dx=x;
+			}
 		}
-		else
-		{
-			dx+=mod->yspacer;
-		}
+		
 	}
 }
 

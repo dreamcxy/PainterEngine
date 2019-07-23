@@ -114,9 +114,6 @@
     <ClCompile Include="..\..\PainterEngine\Core\PX_Wave.c">
       <Filter>PainterEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PainterEngine\Effect\MatrixEffect_ui.c">
-      <Filter>PainterEngine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\PainterEngine\Kernel\PX_Actor.c">
       <Filter>PainterEngine</Filter>
     </ClCompile>
@@ -165,9 +162,6 @@
     <ClCompile Include="SOD_Game.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PainterEngine\platform\windows\Platform_Windows_D2D.cpp">
-      <Filter>PainterEngine</Filter>
-    </ClCompile>
     <ClCompile Include="SOD_Runtime.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -176,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="SOD_Message.c">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PainterEngine\Startup\Platform_Windows_D2D.cpp">
+      <Filter>PainterEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -281,9 +278,6 @@
     <ClInclude Include="..\..\PainterEngine\Core\PX_WAVE.h">
       <Filter>PainterEngine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PainterEngine\Effect\MatrixEffect_ui.h">
-      <Filter>PainterEngine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PainterEngine\Kernel\PX_2dxCommon.h">
       <Filter>PainterEngine</Filter>
     </ClInclude>
@@ -338,9 +332,6 @@
     <ClInclude Include="SOD_Startup.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PainterEngine\platform\windows\Platform_Windows_D2D.h">
-      <Filter>PainterEngine</Filter>
-    </ClInclude>
     <ClInclude Include="SOD_Runtime.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -352,6 +343,9 @@
     </ClInclude>
     <ClInclude Include="SOD_Message.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PainterEngine\Startup\Platform_Windows_D2D.h">
+      <Filter>PainterEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

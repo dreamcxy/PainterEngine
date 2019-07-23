@@ -4,7 +4,7 @@
 #define SOD_RUNTIME_WINDOW_WIDTH 800
 #define SOD_RUNTIME_WINDOW_HEIGHT 600
 
-#include "../../../PainterEngine/platform/windows/Platform_Windows_D2D.h"
+#include "../../PainterEngine/Startup/Platform_Windows_D2D.h"
 
 #pragma comment(lib,"User32.lib")
 #pragma comment(lib,"Shell32.lib")

@@ -139,7 +139,6 @@
     <ClCompile Include="..\..\PainterEngine\Core\PX_Typedef.c" />
     <ClCompile Include="..\..\PainterEngine\Core\PX_Vector.c" />
     <ClCompile Include="..\..\PainterEngine\Core\PX_Wave.c" />
-    <ClCompile Include="..\..\PainterEngine\Effect\MatrixEffect_ui.c" />
     <ClCompile Include="..\..\PainterEngine\Kernel\PX_Actor.c" />
     <ClCompile Include="..\..\PainterEngine\Kernel\PX_Animation.c" />
     <ClCompile Include="..\..\PainterEngine\Kernel\PX_Grammar.c" />
@@ -153,7 +152,7 @@
     <ClCompile Include="..\..\PainterEngine\Kernel\PX_Sync.c" />
     <ClCompile Include="..\..\PainterEngine\Kernel\PX_TransmissionProtocal.c" />
     <ClCompile Include="..\..\PainterEngine\Kernel\PX_World.c" />
-    <ClCompile Include="..\..\PainterEngine\platform\windows\Platform_Windows_D2D.cpp" />
+    <ClCompile Include="..\..\PainterEngine\Startup\Platform_Windows_D2D.cpp" />
     <ClCompile Include="SOD_Message.c" />
     <ClCompile Include="SOD_Game.c" />
     <ClCompile Include="SOD_Play.c" />
@@ -196,7 +195,6 @@
     <ClInclude Include="..\..\PainterEngine\Core\PX_Typedef.h" />
     <ClInclude Include="..\..\PainterEngine\Core\PX_Vector.h" />
     <ClInclude Include="..\..\PainterEngine\Core\PX_WAVE.h" />
-    <ClInclude Include="..\..\PainterEngine\Effect\MatrixEffect_ui.h" />
     <ClInclude Include="..\..\PainterEngine\Kernel\PX_2dxCommon.h" />
     <ClInclude Include="..\..\PainterEngine\Kernel\PX_Actor.h" />
     <ClInclude Include="..\..\PainterEngine\Kernel\PX_Animation.h" />
@@ -213,7 +211,7 @@
     <ClInclude Include="..\..\PainterEngine\Kernel\PX_Sync.h" />
     <ClInclude Include="..\..\PainterEngine\Kernel\PX_TransmissionProtocal.h" />
     <ClInclude Include="..\..\PainterEngine\Kernel\PX_World.h" />
-    <ClInclude Include="..\..\PainterEngine\platform\windows\Platform_Windows_D2D.h" />
+    <ClInclude Include="..\..\PainterEngine\Startup\Platform_Windows_D2D.h" />
     <ClInclude Include="SOD_Message.h" />
     <ClInclude Include="SOD_Game.h" />
     <ClInclude Include="SOD_Play.h" />

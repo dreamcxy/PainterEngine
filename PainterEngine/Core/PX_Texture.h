@@ -41,6 +41,7 @@ px_bool PX_TextureCreateFromMemory(px_memorypool *mp,px_void *data,px_int size,p
 px_bool PX_TextureCopy(px_memorypool *mp,px_texture *restexture,px_texture *dest);
 px_bool PX_TextureCreateScale(px_memorypool *mp,px_texture *resTexture,px_int newWidth,px_int newHeight,px_texture *out);
 px_void PX_TextureRender(px_surface *psurface,px_texture *tex,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint,PX_TEXTURERENDER_BLEND *blend);
+px_void PX_TextureCover(px_surface *psurface,px_texture *tex,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint);
 px_void PX_TextureRenderRotation(px_surface *psurface,px_texture *tex,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint,PX_TEXTURERENDER_BLEND *blend,px_int Angle);
 px_void PX_TextureRenderRotation_vector(px_surface *psurface,px_texture *tex,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint,PX_TEXTURERENDER_BLEND *blend,px_point p_vector);
 px_void PX_TextureRenderRotation_sincos(px_surface *psurface,px_texture *tex,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint,PX_TEXTURERENDER_BLEND *blend,px_float sin,px_float cos);
@@ -52,6 +53,7 @@ px_void PX_TextureRenderMask(px_surface *psurface,px_texture *mask_tex,px_textur
 px_void PX_TextureRenderMaskEx(px_surface *psurface,px_texture *mask_tex,px_texture *map_tex,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint,PX_TEXTURERENDER_BLEND *blend,px_float scale,px_float Angle);
 
 px_void PX_SurfaceRender(px_surface *pdestSurface,px_surface *pResSurface,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint,PX_TEXTURERENDER_BLEND *blend);
+px_void PX_SurfaceCover(px_surface *pdestSurface,px_surface *pResSurface,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint);
 px_void PX_SurfaceSetRect(px_surface *psurface, px_int left, px_int top, px_int right, px_int bottom,px_color color);
 px_bool PX_TextureCreateRotationAngle(px_memorypool *mp,px_texture *resTexture,px_float Angle,px_texture *out);
 px_bool PX_TextureRotationAngleToTexture(px_texture *resTexture,px_float Angle,px_texture *out);

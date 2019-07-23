@@ -2278,7 +2278,7 @@ px_void SOD_PlayRenderUI(SOD_Play *pPlay)
 	PX_GeoDrawCircle(&pPlay->runtime->runtime.RenderSurface,32,32,24,8,PX_COLOR(255,0,0,0));
 	PX_GeoDrawRing(&pPlay->runtime->runtime.RenderSurface,32,32,24,6,color,90,90+(px_int)(force/pShip->max_force*360));
 	PX_itoa((px_int)force,text,sizeof(text),10);
-	PX_FontDrawText(&pPlay->runtime->runtime.RenderSurface,29-__PX_FONT_ASCSIZE*(px_strlen(text)-1)/2-1,26,text,color,PX_FONT_ALIGN_XLEFT);
+	PX_FontDrawText(&pPlay->runtime->runtime.RenderSurface,29-__PX_FONT_ASCSIZE*(PX_strlen(text)-1)/2-1,26,text,color,PX_FONT_ALIGN_XLEFT);
 
 	//渲染生命条
 	life_pc=pShip->life*1.0f/pShip->max_life;
@@ -2311,7 +2311,7 @@ px_void SOD_PlayRenderUI(SOD_Play *pPlay)
 	//分数
 	PX_FontModuleDrawText(&pPlay->runtime->runtime.RenderSurface,300,30,(px_uchar *)SOD_TEXT_SCORE,PX_COLOR(255,0,0,0),&pPlay->runtime->fontmodule,PX_FONT_ALIGN_XLEFT);
 	PX_itoa(pPlay->showScore,text,sizeof(text),10);
-	for (i=0;i<px_strlen(text);i++)
+	for (i=0;i<PX_strlen(text);i++)
 	{
 		utf16_text[i]=text[i];
 	}
@@ -2319,11 +2319,11 @@ px_void SOD_PlayRenderUI(SOD_Play *pPlay)
 	PX_FontModuleDrawText(&pPlay->runtime->runtime.RenderSurface,385,30,(px_uchar *)utf16_text,PX_COLOR(255,0,128,255),&pPlay->runtime->fontmodule,PX_FONT_ALIGN_XLEFT);
 
 	//时间
-	px_sprintf2(text,sizeof(text),SOD_TEXT_ALIVE_TIME,PX_STRINGFORMAT_INT(pPlay->gametime/1000),PX_STRINGFORMAT_INT((pPlay->gametime/10)%100));
+	PX_sprintf2(text,sizeof(text),SOD_TEXT_ALIVE_TIME,PX_STRINGFORMAT_INT(pPlay->gametime/1000),PX_STRINGFORMAT_INT((pPlay->gametime/10)%100));
 	PX_FontDrawText(&pPlay->runtime->runtime.RenderSurface,325,40,text,PX_COLOR(255,255,32,64),PX_FONT_ALIGN_XLEFT);
 
 	//fps
-	px_sprintf1(text,sizeof(text),"fps:%1",PX_STRINGFORMAT_INT(pPlay->fps));
+	PX_sprintf1(text,sizeof(text),"fps:%1",PX_STRINGFORMAT_INT(pPlay->fps));
 	if (pPlay->fps<25)
 	{
 		PX_FontDrawText(&pPlay->runtime->runtime.RenderSurface,75,45,text,PX_COLOR(255,255,0,0),PX_FONT_ALIGN_XLEFT);

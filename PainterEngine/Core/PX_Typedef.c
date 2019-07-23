@@ -74,6 +74,19 @@ PX_RETURN_STRING PX_itos(px_int num,px_int radix)
 	return str;
 }
 
+
+px_void PX_AscToWord(const px_char *asc,px_word *u16)
+{
+	while(*asc)
+	{
+		*u16=*asc;
+		u16++;
+		asc++;
+
+	}
+	*u16=0;
+}
+
 #define PUSH_CHAR(x) do { if (ret < maxlen) { *p++ = x; ret++; } } while (0)  
 
 typedef union {  
@@ -318,7 +331,7 @@ px_double PX_tanh(px_double x)
 {
 	px_double ex,eix;
 	ex=PX_exp(x);
-	eix=PX_exp(-x);
+	eix=1/ex;
 	return (ex-eix)/(ex+eix);
 }
 
@@ -1901,9 +1914,11 @@ px_double PX_pow_ff(px_double num,px_double m)
 		m=-m;
 	}
 	if(m<0) return 1/PX_pow_ff(num,-m);
-	if(m-(px_int)(m)==0) return __px_pow_i(num,(px_int)m);
-	else return __px_pow_f(num,m-(px_int)(m))*__px_pow_i(num,(px_int)(m));
-	return __px_pow_f(num,m);
+	if(m-(px_int)(m)==0) 
+		return __px_pow_i(num,(px_int)m);
+	else 
+		return __px_pow_f(num,m-(px_int)(m))*__px_pow_i(num,(px_int)(m));
+	//return __px_pow_f(num,m);
 }
 
 px_int PX_pow_ii(px_int i,px_int n)

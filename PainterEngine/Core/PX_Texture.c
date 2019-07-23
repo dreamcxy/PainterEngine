@@ -232,6 +232,107 @@ px_void PX_TextureRender(px_surface *psurface,px_texture *tex,px_int x,px_int y,
 
 
 
+px_void PX_TextureCover(px_surface *psurface,px_texture *tex,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint)
+{
+	px_int left,right,top,bottom,j;
+
+	switch (refPoint)
+	{
+	case PX_TEXTURERENDER_REFPOINT_LEFTTOP:
+		break;
+	case PX_TEXTURERENDER_REFPOINT_MIDTOP:
+		x-=tex->width/2;
+		break;
+	case PX_TEXTURERENDER_REFPOINT_RIGHTTOP:
+		x-=tex->width;
+		break;
+	case PX_TEXTURERENDER_REFPOINT_LEFTMID:
+		y-=tex->height/2;
+		break;
+	case PX_TEXTURERENDER_REFPOINT_CENTER:
+		y-=tex->height/2;
+		x-=tex->width/2;
+		break;
+	case PX_TEXTURERENDER_REFPOINT_RIGHTMID:
+		y-=tex->height/2;
+		x-=tex->width;
+		break;
+	case PX_TEXTURERENDER_REFPOINT_LEFTBOTTOM:
+		y-=tex->height;
+		break;
+	case PX_TEXTURERENDER_REFPOINT_MIDBOTTOM:
+		y-=tex->height;
+		x-=tex->width/2;
+		break;
+	case PX_TEXTURERENDER_REFPOINT_RIGHTBOTTOM:
+		y-=tex->height;
+		x-=tex->width;
+		break;
+	}
+
+
+	if (x<-tex->width)
+	{
+		return;
+	}
+	if (x>psurface->width-1)
+	{
+		return;
+	}
+	if (y<-tex->height)
+	{
+		return;
+	}
+	if (y>psurface->height-1)
+	{
+		return;
+	}
+
+	if (x<0)
+	{
+		left=-x;
+	}
+	else
+	{
+		left=0;
+	}
+
+	if (x+tex->width>psurface->width)
+	{
+		right=psurface->width-x-1;
+	}
+	else
+	{
+		right=tex->width-1;
+	}
+
+	if (y<0)
+	{
+		top=-y;
+	}
+	else
+	{
+		top=0;
+	}
+
+	if (y+tex->height>psurface->height)
+	{
+		bottom=psurface->height-y-1;
+	}
+	else
+	{
+		bottom=tex->height-1;
+	}
+
+
+	for (j=top;j<=bottom;j++)
+	{
+		PX_memcpy(&psurface->surfaceBuffer[x+left+psurface->width*(y+j)],&tex->surfaceBuffer[tex->width*(j)+left],sizeof(px_color)*(right-left+1));
+	}
+	
+
+}
+
 px_void PX_TextureRenderRotation(px_surface *psurface,px_texture *tex,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint,PX_TEXTURERENDER_BLEND *blend,px_int Angle)
 {
 	PX_TextureRenderRotation_sincos(psurface,tex,x,y,refPoint,blend,PX_sin_angle((px_float)Angle),PX_cos_angle((px_float)Angle));
@@ -1055,6 +1156,11 @@ px_void PX_TextureFree(px_texture *tex)
 px_void PX_SurfaceRender(px_surface *psurface,px_surface *surface,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint,PX_TEXTURERENDER_BLEND *blend)
 {
 	PX_TextureRender(psurface,surface,x,y,refPoint,blend);
+}
+
+px_void PX_SurfaceCover(px_surface *pdestSurface,px_surface *pResSurface,px_int x,px_int y,PX_TEXTURERENDER_REFPOINT refPoint)
+{
+	PX_TextureCover(pdestSurface,pResSurface,x,y,refPoint);
 }
 
 px_void PX_SurfaceSetRect(px_surface *psurface, px_int left, px_int top, px_int right, px_int bottom,px_color color)

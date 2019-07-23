@@ -126,7 +126,7 @@ px_void SOD_GameRender(SOD_Game *game,px_dword elpased)
 			//äÖÈ¾Message¿ò
 			SOD_MessageRender(&game->GameOver,elpased);
 			//äÖÈ¾»ý·Ö
-			px_sprintf1(Text,sizeof(Text),"%1",PX_STRINGFORMAT_INT(game->last_game_pt));
+			PX_sprintf1(Text,sizeof(Text),"%1",PX_STRINGFORMAT_INT(game->last_game_pt));
 			i=0;
 			while(Text[i]){wtext[i]=Text[i];i++;}
 			wtext[i]=0;

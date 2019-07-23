@@ -2985,7 +2985,7 @@ px_bool PX_ScriptVM_RegistryHostFunction(PX_ScriptVM_Instance *Ins,px_char *name
 	{
 		if (PX_strequ(name,Ins->_host[i].name+1))
 		{
-			Ins->_host[i].map=funcModules;
+			Ins->_host[i].map=(px_void *)funcModules;
 			return PX_TRUE;
 		}
 	}
